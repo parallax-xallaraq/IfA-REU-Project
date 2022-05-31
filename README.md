@@ -1,9 +1,11 @@
 # University of Hawaiʻi at Mānoa - Institute for Astronomy
-## Research Experience for Undergraduates
+Research Experience for Undergraduates
+
 May 24 - July 29
 
 ## People
 Author: Thresa Kelly
+
 Mentors: Dr. Dave Sanders & Connor Auge
 
 ## Project
