@@ -1,7 +1,7 @@
-# University of Hawaiʻi at Mānoa - Institute for Astronomy
+# University of Hawaiʻi at Mānoa: Institute for Astronomy
 Research Experience for Undergraduates
 
-May 24 - July 29
+May 24 2022 - July 29 2022
 
 ## People
 Author: Thresa Kelly
