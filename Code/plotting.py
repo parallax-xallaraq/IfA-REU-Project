@@ -2,6 +2,21 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 
 
+# color constants
+c_ir = '#CE2727'      # use this for IR sources
+c_xray = '#384E77'    # use this for Xray sources
+c_ir_xray = '#470024' # use this for matched IR and Xray sources
+
+
+# redefine the defaults for plots
+def SetStyle() : 
+    mpl.rcParams['figure.figsize']  = 6, 4  # figure size in inches
+    mpl.rcParams['axes.titlesize']  = 16    # size of title
+    mpl.rcParams['axes.titlepad']   = 16    # space between title and plot 
+    mpl.rcParams['axes.labelsize']  = 14    # font size of the x and y labels
+    mpl.rcParams['lines.linewidth'] = 0.5   # line width in points
+
+
 # Draw the selection wedge for Donley 2012 on a plot 
 def PlotDonleyWedge() : 
     # constants
@@ -31,11 +46,3 @@ def PlotDonleyWedge() :
     plt.xlabel('$\log(f_{5.8um}/f_{3.6um})$') 
     plt.ylabel('$\log(f_{8.0um}/f_{4.5um})$') 
 
-
-# redefine the defaults for plots
-def SetStyle() : 
-    mpl.rcParams['figure.figsize']  = 6, 4  # figure size in inches
-    mpl.rcParams['axes.titlesize']  = 16    # size of title
-    mpl.rcParams['axes.titlepad']   = 16    # space between title and plot 
-    mpl.rcParams['axes.labelsize']  = 14    # font size of the x and y labels
-    mpl.rcParams['lines.linewidth'] = 0.5   # line width in points
