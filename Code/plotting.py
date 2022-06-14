@@ -3,9 +3,9 @@ import matplotlib as mpl
 
 
 # color constants
-c_ir        = '#CE2727'     # use this for IR sources
-c_xray      = '#384E77'     # use this for Xray sources
-c_ir_xray   = '#470024'     # use this for matched IR and Xray sources
+c_ir        = '#CE2727'     # Fire Engine Red   # use this for IR sources
+c_xray      = '#384E77'     # Y In Mn Blue      # use this for Xray sources
+c_ir_xray   = '#F9DC5C'     # Naples Yellow     # use this for matched IR and Xray sources
 
 
 # redefine the defaults for plots
