@@ -1,6 +1,7 @@
+import imp
 import matplotlib.pyplot as plt
 import matplotlib as mpl
-
+import numpy as np
 
 # color constants
 c_ir        = '#CE2727'     # Fire Engine Red   # use this for IR sources
@@ -47,3 +48,20 @@ def PlotDonleyWedge() :
     plt.xlabel('$\log(f_{5.8um}/f_{3.6um})$') 
     plt.ylabel('$\log(f_{8.0um}/f_{4.5um})$') 
 
+
+# returns a boolean mask that is True for sources within the Donley 2012 wedge 
+def SourcesInDonleyWedge(x,y) :
+    # initialize mask with all False 
+    mask_inWedge = np.zeros(x.size, dtype=bool)
+    # check all datapoints
+    for i in range(len(x)) :
+        # inside wedge 
+        if(     x[i]>=0.08 and 
+                y[i]>=0.15 and 
+                y[i]>=(1.21*x[i]-0.27) and 
+                y[i]<=(1.21*x[i]+0.27)
+            ) :  
+            # set index to true
+            mask_inWedge[i] = True
+    # return mask
+    return(mask_inWedge)
