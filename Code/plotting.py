@@ -65,3 +65,21 @@ def SourcesInDonleyWedge(x,y) :
             mask_inWedge[i] = True
     # return mask
     return(mask_inWedge)
+
+# add 'n = #' to bottom right of plot
+def addtext_n(n):
+    plt.text(   0.95,                           # x
+                0.05,                           # y 
+                'n = ' + str(n),                # string
+                transform=plt.gca().transAxes,  # use axis coordinants
+                horizontalalignment='right'     # alignment 
+    )
+
+# save plot 
+def save(filename) :
+    plt.savefig(    filename,
+                    bbox_inches ="tight",
+                    pad_inches=0.2,
+                    facecolor='w',
+                    edgecolor='w'
+    )
