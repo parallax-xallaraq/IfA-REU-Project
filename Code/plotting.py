@@ -16,7 +16,7 @@ def SetStyle() :
     mpl.rcParams['axes.titlepad']   = 16    # space between title and plot 
     mpl.rcParams['axes.labelsize']  = 14    # font size of the x and y labels
     mpl.rcParams['axes.labelpad']   = 10    # space between label and axis
-    mpl.rcParams['lines.linewidth'] = 0.5   # line width in points
+    mpl.rcParams['lines.linewidth'] = 1     # line width in points
 
 
 # Draw the selection wedge for Donley 2012 on a plot 
@@ -67,10 +67,10 @@ def SourcesInDonleyWedge(x,y) :
     return(mask_inWedge)
 
 # add 'n = #' to bottom right of plot
-def addtext_n(n):
+def addtext_n(n, pre='n = '):
     plt.text(   0.95,                           # x
                 0.05,                           # y 
-                'n = ' + str(n),                # string
+                pre + str(n),                # string
                 transform=plt.gca().transAxes,  # use axis coordinants
                 horizontalalignment='right'     # alignment 
     )
