@@ -1,12 +1,30 @@
-import imp
+# all imports
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
+import csv 
+
 
 # color constants
 c_ir        = '#CE2727'     # Fire Engine Red   # use this for IR sources
 c_xray      = '#384E77'     # Y In Mn Blue      # use this for Xray sources
 c_ir_xray   = '#F6CD13'     # Jonquil           # use this for matched IR and Xray sources
+
+
+# read from a given csv file and return a list of its contents 
+def ReadFile(filename) : 
+    # initialize list
+    file = []
+    # open csv file
+    with open(filename, newline='') as csv_file : 
+        reader = csv.reader(csv_file, delimiter=',', quotechar='"')
+        # output file into list for easy access
+        for row in reader :
+            file.append(row)
+    # print column names 
+    print(filename, '\tcolumns: ', file[0])
+    # return an array of type int with column names clipped off
+    return(file[1:])
 
 
 # redefine the defaults for plots
