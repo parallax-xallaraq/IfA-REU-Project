@@ -30,11 +30,12 @@ lam_A = np.array([
 
 # returns array of observed wavelengths in Angstroms
 def GetObservedWavelengths_A() : 
+    PrintShape(lam_A)
     return lam_A
 
 # prints shape of array
 def PrintShape(arr) : 
-    print('Array shape', np.shape(arr))
+    print('Array shape:\t', np.shape(arr))
 
 # returns array of all observed photometry and their IDs. Bad values and measurements with fracErr are set to NaN.
 def GetPhotometry(data, fracErr=0.5) :

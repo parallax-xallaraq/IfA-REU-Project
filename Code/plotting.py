@@ -24,6 +24,7 @@ def ReadFile(filename, crop=True) :
             file.append(row)
     
     if(crop) : 
+        print('Cropped: ', file[0])
         # return an array of type int with column names clipped off
         return(file[1:])
     # else, return the full list
