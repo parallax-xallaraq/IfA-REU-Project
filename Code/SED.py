@@ -226,10 +226,11 @@ def PlotSED(
     plt.grid()
     myP.addtext_n(n)
 
-    # square axis
+    # axis
     ax = plt.gca()
     ax.set_aspect('equal')
     ax.set_adjustable('box')
+    ax.set_xticks([1E-2,1E-1,1E0,1E1,1E2,1E3])
 
     # set title
     if(title!='') : 
