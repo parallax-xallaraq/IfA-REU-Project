@@ -216,12 +216,17 @@ def PlotSED(
     # plot settings
     plt.yscale('log')
     plt.xscale('log')
-    plt.xlim(1E-2, 1E+3)
-    plt.ylim(1E-3, 1E+3)
+    plt.xlim(10**-2.5, 10**3.5)
+    plt.ylim(10**-3.5, 10**3.5)
     plt.xlabel('$\lambda_{rest} \; [$'+xunit+'$]$') 
     plt.ylabel('$Normalized \; \lambda F_{\lambda} \; [erg \; s^{-1} \; cm^{-2}]$')
     plt.grid()
     myP.addtext_n(n)
+
+    # square axis
+    ax = plt.gca()
+    ax.set_aspect('equal')
+    ax.set_adjustable('box')
 
     # set title
     if(title!='') : 
