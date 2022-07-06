@@ -12,19 +12,22 @@ c_ir_xray   = '#F6CD13'     # Jonquil           # use this for matched IR and Xr
 
 
 # read from a given csv file and return a list of its contents 
-def ReadFile(filename) : 
+def ReadFile(filename, crop=True) : 
     # initialize list
     file = []
+
     # open csv file
     with open(filename, newline='') as csv_file : 
         reader = csv.reader(csv_file, delimiter=',', quotechar='"')
-        # output file into list for easy access
+        # output each line in the file to the list
         for row in reader :
             file.append(row)
-    # print column names 
-    print(filename, '\tcolumns: ', file[0])
-    # return an array of type int with column names clipped off
-    return(file[1:])
+    
+    if(crop) : 
+        # return an array of type int with column names clipped off
+        return(file[1:])
+    # else, return the full list
+    return(file)
 
 
 # redefine the defaults for plots
