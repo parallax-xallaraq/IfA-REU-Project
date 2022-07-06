@@ -166,7 +166,7 @@ def ConvertToEnergyDensity(lamRest_A, Fnu_uJy) :
 # returns normalized SED at one micron
 def NormalizeSED_1um(lamRest_A, lamFlam_ergscm2) :
 
-    # convert angrstrom to microns
+    # convert angstrom to microns
     lamRest_um = lamRest_A * 1E-4
 
     # initialize list
@@ -200,10 +200,12 @@ def PlotSED(
         y,                  # y-axis data:  lamFlam
         num=0,              # number of SED curves to plot 
         offset=0,           # index offset when plotting SED curves
-        xunit = '$\mu m$',  # unit for x-axis 
         title='',           # plot title
         save=''             # filename to save
     ) : 
+
+    # convert angstrom to microns
+    x_um = x * 1E-4
 
     # get number of sources to plot 
     n = 0
@@ -212,14 +214,14 @@ def PlotSED(
 
     # plot SED curves
     for i in range(n) : 
-        plt.plot(x[i+offset],y[i+offset])
+        plt.plot(x_um[i+offset],y[i+offset])
 
     # plot settings
     plt.yscale('log')
     plt.xscale('log')
     plt.xlim(10**-2.5, 10**3.5)
     plt.ylim(10**-3.5, 10**3.5)
-    plt.xlabel('$\lambda_{rest} \; [$'+xunit+'$]$') 
+    plt.xlabel('$\lambda_{rest} \; [\mu m]$') 
     plt.ylabel('$Normalized \; \lambda F_{\lambda} \; [erg \; s^{-1} \; cm^{-2}]$')
     plt.grid()
     myP.addtext_n(n)
