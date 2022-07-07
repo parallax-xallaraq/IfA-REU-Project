@@ -202,7 +202,8 @@ def PlotSED(
         num=0,              # number of SED curves to plot 
         offset=0,           # index offset when plotting SED curves
         title='',           # plot title
-        save=''             # filename to save
+        save='',            # filename to save
+        median=True         # plots a median line when true
     ) : 
 
     # convert angstrom to microns
@@ -217,9 +218,10 @@ def PlotSED(
     for i in range(n) : 
         plt.plot(x_um[i+offset],y[i+offset])
 
-    # plot median 
-    x_m, y_m = MedianCurve(x_um, y, xmin=np.nanmin(x_um),xmax=np.nanmax(x_um))
-    plt.plot(x_m,y_m,c='k',linewidth=2)
+    # plot median
+    if(median) : 
+        x_m, y_m = MedianCurve(x_um, y, xmin=np.nanmin(x_um),xmax=np.nanmax(x_um))
+        plt.plot(x_m,y_m,c='k',linewidth=2)
 
     # plot settings
     plt.yscale('log')
