@@ -1,10 +1,11 @@
+# all imports 
 import matplotlib.pyplot as plt
 import plotting as myP
-from scipy import interpolate
-from astropy.io import fits
 import numpy as np
+from astropy.io import fits
+from scipy import interpolate
 
-# list wavelengths of the photometry filters (in Angstroms) -- Used lambda_ref from: http://svo2.cab.inta-csic.es/theory/fps3/
+# list wavelengths of the photometry filters (in Angstroms) 
 lam_A = np.array([
           1535.08,      # 'GALEX_FUV_FLUX'
           2300.79,      # 'GALEX_NUV_FLUX'
@@ -26,7 +27,7 @@ lam_A = np.array([
              2.48e+6,   # 'FIR_250_FLUX'
              3.48e+6,   # 'FIR_350_FLUX'
              5.00e+6    # 'FIR_500_FLUX'
-    ])
+    ]) # Used lambda_ref from: http://svo2.cab.inta-csic.es/theory/fps3/
 
 # returns array of observed wavelengths in Angstroms
 def GetObservedWavelengths_A() : 

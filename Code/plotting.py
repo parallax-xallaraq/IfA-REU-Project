@@ -4,12 +4,10 @@ import matplotlib as mpl
 import numpy as np
 import csv 
 
-
 # color constants
 c_ir        = '#CE2727'     # Fire Engine Red   # use this for IR sources
 c_xray      = '#384E77'     # Y In Mn Blue      # use this for Xray sources
 c_ir_xray   = '#F6CD13'     # Jonquil           # use this for matched IR and Xray sources
-
 
 # read from a given csv file and return a list of its contents 
 def ReadFile(filename, crop=True) : 
@@ -36,7 +34,6 @@ def ReadFile(filename, crop=True) :
     # else, return the full list
     return(file)
 
-
 # redefine the defaults for plots
 def SetStyle() : 
     mpl.rcParams['figure.figsize']  = 6, 4  # figure size in inches
@@ -45,7 +42,6 @@ def SetStyle() :
     mpl.rcParams['axes.labelsize']  = 14    # font size of the x and y labels
     mpl.rcParams['axes.labelpad']   = 10    # space between label and axis
     mpl.rcParams['lines.linewidth'] = 1     # line width in points
-
 
 # Draw the selection wedge for Donley 2012 on a plot 
 def PlotDonleyWedge() : 
@@ -75,7 +71,6 @@ def PlotDonleyWedge() :
     # name the x and y axis 
     plt.xlabel('$\log(f_{5.8um}/f_{3.6um})$') 
     plt.ylabel('$\log(f_{8.0um}/f_{4.5um})$') 
-
 
 # returns a boolean mask that is True for sources within the Donley 2012 wedge 
 def SourcesInDonleyWedge(x,y) :
