@@ -220,7 +220,7 @@ def PlotSED(
 
     # plot median
     if(median) : 
-        x_m, y_m = MedianCurve(x_um, y, xmin=np.nanmin(x_um),xmax=1E+1)
+        x_m, y_m = MedianCurve(x_um, y, xmin=1E-1,xmax=1E+1)
         plt.plot(x_m,y_m,c='k',linewidth=2)
 
     # plot settings
