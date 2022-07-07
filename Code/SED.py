@@ -220,7 +220,7 @@ def PlotSED(
     plt.yscale('log')
     plt.xscale('log')
     plt.xlim(10**-2.5, 10**3.5)
-    plt.ylim(10**-3.5, 10**3.5)
+    plt.ylim(10**-3, 10**3)
     plt.xlabel('$\lambda_{rest} \; [\mu m]$') 
     plt.ylabel('$Normalized \; \lambda F_{\lambda} \; [erg \; s^{-1} \; cm^{-2}]$')
     plt.grid()
