@@ -217,6 +217,10 @@ def PlotSED(
     for i in range(n) : 
         plt.plot(x_um[i+offset],y[i+offset])
 
+    # plot median 
+    x_m, y_m = MedianCurve(x_um, y, xmin=np.nanmin(x_um),xmax=np.nanmax(x_um))
+    plt.plot(x_m,y_m,c='k',linewidth=2)
+
     # plot settings
     plt.yscale('log')
     plt.xscale('log')
@@ -234,7 +238,7 @@ def PlotSED(
     ax.set_xticks([1E-2,1E-1,1E0,1E1,1E2,1E3])
 
     # set title
-    if(title!='') : 
+    if(title) : 
         plt.title(title)
 
     # save plot as image 
@@ -247,10 +251,10 @@ def PlotSED(
 # returns x and y arrays for the parameter's median curve
 def MedianCurve(x,y,xmin=1E-1,xmax=1E+2) : 
     
-    # initialize lists
+    # initialize objects
     f_all = []
     f_all_discrete = []
-    x_sample = np.arange( xmin, xmax, 0.1 )
+    x_sample = np.arange(xmin,xmax,0.1)
 
     # interpolate each source
     for xx,yy in zip(x,y) : 
