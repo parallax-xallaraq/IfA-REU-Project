@@ -243,3 +243,31 @@ def PlotSED(
     
     # display 
     plt.show()   
+
+# returns x and y arrays for the parameter's median curve
+def MedianCurve(x,y,xmin=1E-1,xmax=1E+2) : 
+    
+    # initialize lists
+    f_all = []
+    f_all_discrete = []
+    x_sample = np.arange( xmin, xmax, 0.1 )
+
+    # interpolate each source
+    for xx,yy in zip(x,y) : 
+        # get log scale and exclude NaN
+        logx = np.log10(xx[~np.isnan(yy)])
+        logy = np.log10(yy[~np.isnan(yy)])
+        # interpolate flux curve 
+        f = interpolate.interp1d(logx, logy, kind='linear', fill_value='extrapolate')
+        f_all.append(f)
+
+    # get discrete points for each f(x)
+    for f in f_all : 
+        discrcete = 10**f(np.log10(x_sample))
+        f_all_discrete.append(discrcete)
+
+    # get median y value for each x
+    y_median = np.median(f_all_discrete, axis=0)
+
+    # return x and y 
+    return x_sample, y_median
