@@ -162,9 +162,10 @@ def PlotDonleyXray(
     ) :
     # plot data16
     plt.scatter(x_nX, y_nX, marker='x', s=4, c='lightgrey',        label='No X-ray (n='+str(len(x_nX))+')')
-    plt.scatter(x_yX, y_yX, marker='D', s=3, c=Lx, cmap='inferno', label='Has X-ray (n='+str(len(x_yX))+')') # alt: inferno, turbo_r
+    plt.scatter(x_yX, y_yX, marker='D', s=3, c=Lx, cmap='inferno', label='Has X-ray (n='+str(len(x_yX))+')')
 
     # color bar 
+    plt.clim(41.5, 46.0) # colorbar limits 
     plt.colorbar(label='$\log(L_{x(0.5-10keV)}) \,\, [erg \,\, s^{-1}]$')
 
     # plotting
