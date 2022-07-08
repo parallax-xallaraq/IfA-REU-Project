@@ -106,3 +106,92 @@ def save(filename) :
                     facecolor='w',
                     edgecolor='w'
     )
+
+# plot 3 types of AGN on Donley IRAC color-color plot
+def PlotDonleyTricolor(
+        x_xr, y_xr,             # X-ray (blue)
+        x_ir, y_ir,             # infrared (red)
+        x_ix, y_ix,             # overlap (yellow)
+        path='', fileName='',   # save
+        printInfo=True          # output text
+    ) :
+
+    # plot data
+    plt.scatter(x_xr, y_xr, marker='P', c=c_xray,     s=3, label='X-ray luminous (n='+str(len(x_xr))+')')
+    plt.scatter(x_ir, y_ir, marker='^', c=c_ir,       s=3, label='Donley selected (n='+str(len(x_ir))+')')
+    plt.scatter(x_ix, y_ix, marker='o', c=c_ir_xray,  s=3, label='Donley & X-ray (n='+str(len(x_ix))+')')
+
+    # plotting class
+    PlotDonleyWedge()
+    addtext_n(len(x_ir)+len(x_xr)+len(x_ix))
+
+    # save
+    if(path and fileName) :
+        plt.axis([-1.5,2.5,-1.5,2.5]) 
+        save(path+'\\'+fileName+'_FULL.png')
+        plt.axis([-0.7,1.0,-0.7,1.0]) 
+        save(path+'\\'+fileName+'_ZOOM.png')
+        plt.legend(markerscale=3) 
+        save(path+'\\'+fileName+'_ZOOM_legend.png')
+    else :
+        plt.axis([-0.7,1.0,-0.7,1.0]) 
+        plt.legend(markerscale=3) 
+
+    # display
+    plt.show()
+
+    # print info 
+    if(printInfo) :
+        print('Number of IR only:\t',   len(x_ir))
+        print('Number of Xray only:\t', len(x_xr))
+        print('Number of matches:\t',   len(x_ix))
+        print('Total Number:\t\t',      len(x_ir)+len(x_xr)+len(x_ix))
+        print( len(x_xr) / (len(x_xr)+len(x_ix)) * 100., '% of Xray sources fall outside wedge.')
+        print( len(x_ir) / (len(x_ir)+len(x_ix)) * 100. ,'% of IR souces have no Xray greater than 10^43')
+    
+    # done
+    return
+
+# plot AGN on Donley IRAC color-color plot with X-ray luminosity colorbar
+def PlotDonleyXray(
+        x_nX, y_nX,             # no X-ray detections 
+        x_yX, y_yX,             # yes X-ray detections
+        Lx,                     # X-ray luminosity (colorbar)
+        path='', fileName='',   # save
+        printInfo=True          # output text
+    ) :
+    # plot data16
+    plt.scatter(x_nX, y_nX, marker='x', s=4, c='lightgrey',        label='No X-ray (n='+str(len(x_nX))+')')
+    plt.scatter(x_yX, y_yX, marker='D', s=3, c=Lx, cmap='inferno', label='Has X-ray (n='+str(len(x_yX))+')') # alt: inferno, turbo_r
+
+    # color bar 
+    plt.colorbar(label='$\log(L_{x(0.5-10keV)}) \,\, [erg \,\, s^{-1}]$')
+
+    # plotting
+    PlotDonleyWedge()
+    addtext_n(len(x_nX)+len(x_yX))
+
+
+    # save
+    if(path and fileName) :
+        plt.axis([-1.5,2.5,-1.5,2.5]) 
+        save(path+'\\'+fileName+'_FULL.png')
+        plt.axis([-0.7,1.0,-0.7,1.0]) 
+        save(path+'\\'+fileName+'_ZOOM.png')
+        plt.legend(markerscale=3) 
+        save(path+'\\'+fileName+'_ZOOM_legend.png')
+    else :
+        plt.axis([-0.7,1.0,-0.7,1.0]) 
+        plt.legend(markerscale=3) 
+
+    # display
+    plt.show()
+
+    #print info 
+    if(printInfo) : 
+        print('Number with Xray:\t',    len(x_yX))
+        print('Number without Xray:\t', len(x_nX))
+        print('Total Number:\t\t',      len(x_yX)+len(x_nX))
+    
+    # done    
+    return
