@@ -203,7 +203,11 @@ def PlotSED(
         offset=0,           # index offset when plotting SED curves
         title='',           # plot title
         save='',            # filename to save
-        median=True         # plots a median line when true
+        median=True,        # plots a median line when true
+        xmin=10**-2.5, 
+        xmax=10**3.5,
+        ymin=10**-3,
+        ymax=10**3
     ) : 
 
     # convert angstrom to microns
@@ -226,8 +230,8 @@ def PlotSED(
     # plot settings
     plt.yscale('log')
     plt.xscale('log')
-    plt.xlim(10**-2.5, 10**3.5)
-    plt.ylim(10**-3, 10**3)
+    plt.xlim(xmin, xmax)
+    plt.ylim(ymin, ymax)
     plt.xlabel('$\lambda_{rest} \; [\mu m]$') 
     plt.ylabel('$Normalized \; \lambda F_{\lambda} \; [erg \; s^{-1} \; cm^{-2}]$')
     plt.grid()
@@ -273,7 +277,7 @@ def MedianCurve(x,y,xmin=1E-1,xmax=1E+2) :
         f_all_discrete.append(discrcete)
 
     # get median y value for each x
-    y_median = np.median(f_all_discrete, axis=0)
+    y_median = np.nanmedian(f_all_discrete, axis=0)
 
     # return x and y 
     return x_sample, y_median
