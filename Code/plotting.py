@@ -113,6 +113,7 @@ def PlotDonleyTricolor(
         x_ir, y_ir,             # infrared (red)
         x_ix, y_ix,             # overlap (yellow)
         path='', fileName='',   # save
+        saveAll=False,           # save 3 versions of plot 
         printInfo=True          # output text
     ) :
 
@@ -127,12 +128,19 @@ def PlotDonleyTricolor(
 
     # save
     if(path and fileName) :
-        plt.axis([-1.5,2.5,-1.5,2.5]) 
-        save(path+'\\'+fileName+'_FULL.png')
-        plt.axis([-0.7,1.0,-0.7,1.0]) 
-        save(path+'\\'+fileName+'_ZOOM.png')
-        plt.legend(markerscale=3) 
-        save(path+'\\'+fileName+'_ZOOM_legend.png')
+        
+        if(saveAll) : 
+            plt.axis([-1.5,2.5,-1.5,2.5]) 
+            save(path+'\\'+fileName+'_FULL.png')
+            plt.axis([-0.7,1.0,-0.7,1.0]) 
+            save(path+'\\'+fileName+'_ZOOM.png')    
+            plt.legend(markerscale=3)
+            save(path+'\\'+fileName+'_ZOOM_legend.png')
+        else : 
+            plt.axis([-0.7,1.0,-0.7,1.0]) 
+            plt.legend(markerscale=3) 
+            save(path+'\\'+fileName+'_ZOOM_legend.png')
+
     else :
         plt.axis([-0.7,1.0,-0.7,1.0]) 
         plt.legend(markerscale=3) 
@@ -158,6 +166,7 @@ def PlotDonleyXray(
         x_yX, y_yX,             # yes X-ray detections
         Lx,                     # X-ray luminosity (colorbar)
         path='', fileName='',   # save
+        saveAll=False,          # save 3 versions of plot 
         printInfo=True          # output text
     ) :
     # plot data16
@@ -175,12 +184,19 @@ def PlotDonleyXray(
 
     # save
     if(path and fileName) :
-        plt.axis([-1.5,2.5,-1.5,2.5]) 
-        save(path+'\\'+fileName+'_FULL.png')
-        plt.axis([-0.7,1.0,-0.7,1.0]) 
-        save(path+'\\'+fileName+'_ZOOM.png')
-        plt.legend(markerscale=3) 
-        save(path+'\\'+fileName+'_ZOOM_legend.png')
+
+        if(saveAll) : 
+            plt.axis([-1.5,2.5,-1.5,2.5]) 
+            save(path+'\\'+fileName+'_FULL.png')
+            plt.axis([-0.7,1.0,-0.7,1.0]) 
+            save(path+'\\'+fileName+'_ZOOM.png')    
+            plt.legend(markerscale=3) 
+            save(path+'\\'+fileName+'_ZOOM_legend.png')
+        else : 
+            plt.axis([-0.7,1.0,-0.7,1.0]) 
+            plt.legend(markerscale=3) 
+            save(path+'\\'+fileName+'_ZOOM_legend.png')
+
     else :
         plt.axis([-0.7,1.0,-0.7,1.0]) 
         plt.legend(markerscale=3) 
