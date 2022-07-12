@@ -237,20 +237,34 @@ def PlotSED(
         cmap_use =  plt.cm.get_cmap('jet', n_ticks-1)
 
     # transpose y to get 24um column, then take the log
-    # z = np.log10( y.T [14] ) 
     z = y.T [14]                    # transpose y to get 24um column
     z_log = np.log10(z)             # get log of 24um column 
     znorm = z / np.nanmax(abs(z))   # normalize
     znorm_log = np.log10(znorm)     # get log of normalized 24um
-    znorm_log_norm = (znorm_log / np.nanmax(abs(znorm_log))) + 1    # normalize the log-normalized-z and +1 to make positive range 0-1
+    znorm_log_norm = (znorm_log / np.nanmax(abs(znorm_log))) + 1    # normalize the log-normalized-z and +1 to make positive range 0-1    
 
-    
-    # plot SED curves
-    for i in range(n) : 
-        if(z[i] == float('nan')) : 
-            plt.plot(x_um[i],y[i],color='lightgrey')    # this doesnt work??? TODO 
-        else : 
-            plt.plot(x_um[i],y[i],color=cmap_use(znorm_log_norm[i]))
+    # get masks for no and yes 24um measurements 
+    no24 = np.where(np.isnan(z))
+    no24_mask = (np.zeros(n, dtype=bool))
+    no24_mask[no24] = True 
+    ye24_mask = ~ no24_mask
+
+    # apply mask 
+    x_no24 = x_um[no24_mask]
+    y_no24 = y[no24_mask]
+    x_ye24 = x_um[ye24_mask]
+    y_ye24 = y[ye24_mask]
+    znorm_log_norm_ye24 = znorm_log_norm[ye24_mask]
+
+    # plot SED curves for no24
+    n_no24 = np.shape(x_no24)[0] # row
+    for i in range(n_no24) : 
+        plt.plot(x_no24[i],y_no24[i], color='gray')
+
+    # plot SED curves for ye24
+    n_ye24 = np.shape(x_ye24)[0] # row
+    for i in range(n_ye24) : 
+        plt.plot(x_ye24[i],y_ye24[i], color=cmap_use(znorm_log_norm_ye24[i]))
 
     # plot median
     if(median) : 
