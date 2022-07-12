@@ -1,4 +1,5 @@
 # all imports 
+from cmath import nan
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import plotting as myP
@@ -216,6 +217,9 @@ def PlotSED(
         ymax=10**3          # plot range 
     ) : 
 
+    # constant
+    n_ticks = 9
+
     # convert angstrom to microns
     x_um = x * 1E-4
 
@@ -230,14 +234,17 @@ def PlotSED(
     elif(cmap=='blu' or cmap=='blue' or cmap=='b') : 
         cmap_use = blu_cmap
     else :
-        cmap_use =  mpl.cm.jet
+        cmap_use =  plt.cm.get_cmap('jet', n_ticks-1)
 
     # transpose y to get 24um column, then take the log
     z = np.log10( y.T [14] ) 
 
     # plot SED curves
     for i in range(n) : 
-        plt.plot(x_um[i],y[i],color=cmap_use(z[i]))
+        if(z[i] == float('nan')) : 
+            plt.plot(x_um[i],y[i],color='lightgrey')    # this doesnt work??? TODO 
+        else : 
+            plt.plot(x_um[i],y[i],color=cmap_use(z[i]))
 
     # plot median
     if(median) : 
@@ -262,12 +269,10 @@ def PlotSED(
 
     # setup colorbar 
     if(showBar) :
-
         # get range
         min=np.nanmin(z)
         max=np.nanmax(z)
         # get tick marks
-        n_ticks = 9
         interval = (max - min) / (n_ticks - 1)
         mult = np.arange(0,n_ticks)
         ticks = min+(interval*mult)
