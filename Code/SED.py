@@ -1,9 +1,15 @@
 # all imports 
 import matplotlib.pyplot as plt
+import matplotlib as mpl
 import plotting as myP
 import numpy as np
 from astropy.io import fits
 from scipy import interpolate
+
+# custom colormaps 
+red_cmap = mpl.colors.ListedColormap(['#6A040F','#9D0208','#D00000','#DC2F02','#E85D04','#F48C06','#FAA307','#FFBA08'])
+yel_cmap = mpl.colors.ListedColormap(['#3C8802','#81C200','#B7E805','#E3F11A','#FFF705','#FCE805','#FCD703','#FAC800'])
+blu_cmap = mpl.colors.ListedColormap(['#003E6E','#0461A7','#0699C6','#0FCBD1','#24E3C0','#47F08B','#94F76F','#BEF768'])
 
 # list wavelengths of the photometry filters (in Angstroms) 
 lam_A = np.array([
@@ -199,28 +205,39 @@ def NormalizeSED_1um(lamRest_A, lamFlam_ergscm2) :
 def PlotSED(
         x,                  # x-axis data   lam
         y,                  # y-axis data:  lamFlam
-        num=0,              # number of SED curves to plot 
-        offset=0,           # index offset when plotting SED curves
+        cmap='',            # colormap options: red, yel, blu, (jet otherwise)
+        showBar=False,      # show the colorbar 
         title='',           # plot title
         save='',            # filename to save
         median=True,        # plots a median line when true
-        xmin=10**-2.5, 
-        xmax=10**3.5,
-        ymin=10**-3,
-        ymax=10**3
+        xmin=10**-2.5,      # plot range 
+        xmax=10**3.5,       # plot range 
+        ymin=10**-3,        # plot range 
+        ymax=10**3          # plot range 
     ) : 
 
     # convert angstrom to microns
     x_um = x * 1E-4
 
     # get number of sources to plot 
-    n = 0
-    if(num) :   n = num
-    else :      n = np.shape(x)[0] # row
+    n = np.shape(x)[0] # row
+
+    # get colormap
+    if  (cmap=='red' or cmap=='r') : 
+        cmap_use = red_cmap
+    elif(cmap=='yel' or cmap=='yellow' or cmap=='y') : 
+        cmap_use = yel_cmap
+    elif(cmap=='blu' or cmap=='blue' or cmap=='b') : 
+        cmap_use = blu_cmap
+    else :
+        cmap_use =  mpl.cm.jet_r
+
+    # transpose y to get 24um column, then take the log
+    z = np.log10( y.T [14] ) 
 
     # plot SED curves
     for i in range(n) : 
-        plt.plot(x_um[i+offset],y[i+offset])
+        plt.plot(x_um[i],y[i],color=cmap_use(z[i]))
 
     # plot median
     if(median) : 
@@ -242,6 +259,12 @@ def PlotSED(
     ax.set_aspect('equal')
     ax.set_adjustable('box')
     ax.set_xticks([1E-2,1E-1,1E0,1E1,1E2,1E3])
+
+    # setup colorbar 
+    if(showBar) :
+        norm = mpl.colors.Normalize(vmin=np.nanmin(z), vmax=np.nanmax(z))
+        sm = plt.cm.ScalarMappable(norm=norm, cmap=cmap_use)
+        plt.colorbar(sm, label='$Normalized \; \lambda F_{\lambda} \; at \; 24 \mu m$')
 
     # set title
     if(title) : 
