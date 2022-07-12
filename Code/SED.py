@@ -237,14 +237,20 @@ def PlotSED(
         cmap_use =  plt.cm.get_cmap('jet', n_ticks-1)
 
     # transpose y to get 24um column, then take the log
-    z = np.log10( y.T [14] ) 
+    # z = np.log10( y.T [14] ) 
+    z = y.T [14]                    # transpose y to get 24um column
+    z_log = np.log10(z)             # get log of 24um column 
+    znorm = z / np.nanmax(abs(z))   # normalize
+    znorm_log = np.log10(znorm)     # get log of normalized 24um
+    znorm_log_norm = (znorm_log / np.nanmax(abs(znorm_log))) + 1    # normalize the log-normalized-z and +1 to make positive range 0-1
 
+    
     # plot SED curves
     for i in range(n) : 
         if(z[i] == float('nan')) : 
             plt.plot(x_um[i],y[i],color='lightgrey')    # this doesnt work??? TODO 
         else : 
-            plt.plot(x_um[i],y[i],color=cmap_use(z[i]))
+            plt.plot(x_um[i],y[i],color=cmap_use(znorm_log_norm[i]))
 
     # plot median
     if(median) : 
@@ -270,8 +276,8 @@ def PlotSED(
     # setup colorbar 
     if(showBar) :
         # get range
-        min=np.nanmin(z)
-        max=np.nanmax(z)
+        min=np.nanmin(z_log)
+        max=np.nanmax(z_log)
         # get tick marks
         interval = (max - min) / (n_ticks - 1)
         mult = np.arange(0,n_ticks)
@@ -279,7 +285,7 @@ def PlotSED(
         # setup colorbar 
         norm = mpl.colors.Normalize(vmin=min, vmax=max)
         sm = plt.cm.ScalarMappable(norm=norm, cmap=cmap_use)
-        plt.colorbar(sm, ticks=ticks ) # label='$Normalized \; \lambda F_{\lambda} \; at \; 24 \mu m$'
+        plt.colorbar(sm, ticks=ticks, label='$Normalized \; \lambda F_{\lambda} \; at \; 24 \mu m$')
 
     # set title
     if(title) : 
