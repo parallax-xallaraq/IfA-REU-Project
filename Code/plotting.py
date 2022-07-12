@@ -169,9 +169,10 @@ def PlotDonleyXray(
         saveAll=False,          # save 3 versions of plot 
         printInfo=True          # output text
     ) :
+    
     # plot data16
-    plt.scatter(x_nX, y_nX, marker='x', s=4, c='lightgrey',        label='No X-ray (n='+str(len(x_nX))+')')
-    plt.scatter(x_yX, y_yX, marker='D', s=3, c=Lx, cmap='inferno', label='Has X-ray (n='+str(len(x_yX))+')')
+    plt.scatter(x_nX, y_nX, marker='x', s=4, c='lightgrey', label='No X-ray (n='+str(len(x_nX))+')')
+    plt.scatter(x_yX, y_yX, marker='D', s=3, c=Lx, cmap=plt.cm.get_cmap('inferno',9), label='Has X-ray (n='+str(len(x_yX))+')')
 
     # color bar 
     plt.clim(41.5, 46.0) # colorbar limits 
