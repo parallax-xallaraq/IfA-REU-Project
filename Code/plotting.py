@@ -176,7 +176,7 @@ def PlotDonleyXray(
 
     # color bar 
     plt.clim(41.5, 46.0) # colorbar limits 
-    plt.colorbar(label='$\log(L_{x(0.5-10keV)}) \,\, [erg \,\, s^{-1}]$')
+    plt.colorbar(label='$\log( \; L_{x(0.5-10keV)} \; [erg \; s^{-1}] \;)$')
 
     # plotting
     PlotDonleyWedge()
