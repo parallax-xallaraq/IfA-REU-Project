@@ -9,7 +9,7 @@ from scipy import interpolate
 
 # custom colormaps 
 red_cmap = mpl.colors.ListedColormap(['#6A040F','#9D0208','#D00000','#DC2F02','#E85D04','#F48C06','#FAA307','#FFBA08'])
-yel_cmap = mpl.colors.ListedColormap(['#3C8802','#81C200','#B7E805','#E3F11A','#FFF705','#FCE805','#FCD703','#FAC800'])
+yel_cmap = mpl.colors.ListedColormap(['#3C8802','#6FB505','#A1D907','#D1F520','#FFF705','#F7E200','#EECA00','#DDB100'])
 blu_cmap = mpl.colors.ListedColormap(['#003E6E','#0461A7','#0699C6','#0FCBD1','#24E3C0','#47F08B','#94F76F','#BEF768'])
 
 # list wavelengths of the photometry filters (in Angstroms) 
