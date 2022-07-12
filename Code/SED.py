@@ -206,7 +206,7 @@ def PlotSED(
         x,                  # x-axis data   lam
         y,                  # y-axis data:  lamFlam
         cmap='',            # colormap options: red, yel, blu, (jet otherwise)
-        showBar=False,      # show the colorbar 
+        showBar=True,      # show the colorbar 
         title='',           # plot title
         save='',            # filename to save
         median=True,        # plots a median line when true
@@ -230,7 +230,7 @@ def PlotSED(
     elif(cmap=='blu' or cmap=='blue' or cmap=='b') : 
         cmap_use = blu_cmap
     else :
-        cmap_use =  mpl.cm.jet_r
+        cmap_use =  mpl.cm.jet
 
     # transpose y to get 24um column, then take the log
     z = np.log10( y.T [14] ) 
@@ -262,9 +262,19 @@ def PlotSED(
 
     # setup colorbar 
     if(showBar) :
-        norm = mpl.colors.Normalize(vmin=np.nanmin(z), vmax=np.nanmax(z))
+
+        # get range
+        min=np.nanmin(z)
+        max=np.nanmax(z)
+        # get tick marks
+        n_ticks = 9
+        interval = (max - min) / (n_ticks - 1)
+        mult = np.arange(0,n_ticks)
+        ticks = min+(interval*mult)
+        # setup colorbar 
+        norm = mpl.colors.Normalize(vmin=min, vmax=max)
         sm = plt.cm.ScalarMappable(norm=norm, cmap=cmap_use)
-        plt.colorbar(sm, label='$Normalized \; \lambda F_{\lambda} \; at \; 24 \mu m$')
+        plt.colorbar(sm, ticks=ticks ) # label='$Normalized \; \lambda F_{\lambda} \; at \; 24 \mu m$'
 
     # set title
     if(title) : 
