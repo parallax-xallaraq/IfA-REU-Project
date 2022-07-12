@@ -1,11 +1,9 @@
 # all imports 
-from cmath import nan
+from scipy import interpolate
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import plotting as myP
 import numpy as np
-from astropy.io import fits
-from scipy import interpolate
 
 # custom colormaps 
 red_cmap = mpl.colors.ListedColormap(['#6A040F','#9D0208','#D00000','#DC2F02','#E85D04','#F48C06','#FAA307','#FFBA08'])
@@ -207,14 +205,14 @@ def PlotSED(
         x,                  # x-axis data   lam
         y,                  # y-axis data:  lamFlam
         cmap='',            # colormap options: red, yel, blu, (jet otherwise)
-        showBar=True,      # show the colorbar 
+        showBar=True,       # show the colorbar 
         title='',           # plot title
         save='',            # filename to save
         median=True,        # plots a median line when true
         xmin=10**-2.5,      # plot range 
-        xmax=10**3.5,       # plot range 
-        ymin=10**-3,        # plot range 
-        ymax=10**3          # plot range 
+        xmax=10**3.5,       #   "    "
+        ymin=10**-3,        #   "    "
+        ymax=10**3          #   "    "
     ) : 
 
     # constant
