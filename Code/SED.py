@@ -79,12 +79,6 @@ def GetObservedWavelengths_A() :
 
 #################### HELPER FUNCTIONS ####################
 
-# unit conversions
-def Convert_A_um(ang) : 
-    return (ang * 1E-4)
-def Convert_A_cm(ang) : 
-    return (ang * 1E-8)
-
 # prints shape of array
 def PrintShape(arr) : 
     print('Array shape:\t', np.shape(arr))
@@ -96,6 +90,14 @@ def GetID(data) :
     PrintShape(ids)
     return ids
 
+#################### MATH ####################
+
+# unit conversions
+def Convert_A_um(ang) : 
+    return (ang * 1E-4)
+def Convert_A_cm(ang) : 
+    return (ang * 1E-8)
+
 # returns interpolated function (log scale) from x and y (not log)
 def Interpolate_log(x,y) :
     # get log scale and exclude NaN
@@ -105,6 +107,10 @@ def Interpolate_log(x,y) :
     f = interpolate.interp1d(logx, logy, kind='linear', fill_value='extrapolate')
     # return interpolated function 
     return f
+
+# returns f(x) corrected for log scales 
+def Flog_X(f,x) : 
+    return 10**f(np.log10(x))
 
 #################### SED PREP ####################
 
@@ -230,7 +236,7 @@ def NormalizeSED_1um(lamRest_A, lamFlam_ergscm2) :
         # interpolate
         f = Interpolate_log(x,y)
         # normalize
-        at1um = 10**f(np.log10(1))
+        at1um = Flog_X(f,1)
         lamFlam_ergscm2_NORM.append( y / at1um)
 
     # convert list to array 
@@ -381,7 +387,7 @@ def MedianCurve(x,y,xmin=1E-1,xmax=1E+2) :
 
     # get discrete points for each f(x)
     for f in f_all : 
-        discrcete = 10**f(np.log10(x_sample))
+        discrcete = Flog_X(f,x_sample)
         f_all_discrete.append(discrcete)
 
     # get median y value for each x
