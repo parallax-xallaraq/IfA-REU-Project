@@ -96,6 +96,16 @@ def GetID(data) :
     PrintShape(ids)
     return ids
 
+# returns interpolated function (log scale) from x and y (not log)
+def Interpolate_log(x,y) :
+    # get log scale and exclude NaN
+    logx = np.log10(x[~np.isnan(y)])
+    logy = np.log10(y[~np.isnan(y)])
+    # interpolate curve 
+    f = interpolate.interp1d(logx, logy, kind='linear', fill_value='extrapolate')
+    # return interpolated function 
+    return f
+
 #################### SED PREP ####################
 
 # returns array of all observed photometry and their IDs. Bad values and measurements with fracErr are set to NaN.
@@ -215,15 +225,10 @@ def NormalizeSED_1um(lamRest_A, lamFlam_ergscm2) :
     # initialize list
     lamFlam_ergscm2_NORM = []
 
-    for row in range(np.shape(lamRest_um)[0]) : 
-        # get x and y list
-        x = lamRest_um[row]
-        y = lamFlam_ergscm2[row]
-        # get log scale and exclude NaN
-        logx = np.log10(x[~np.isnan(y)])
-        logy = np.log10(y[~np.isnan(y)])
-        # interpolate flux curve 
-        f = interpolate.interp1d(logx, logy, kind='linear', fill_value='extrapolate')
+    # interpolate and normalize at 1um 
+    for x,y in zip(lamRest_um,lamFlam_ergscm2) : 
+        # interpolate
+        f = Interpolate_log(x,y)
         # normalize
         at1um = 10**f(np.log10(1))
         lamFlam_ergscm2_NORM.append( y / at1um)
@@ -371,11 +376,7 @@ def MedianCurve(x,y,xmin=1E-1,xmax=1E+2) :
 
     # interpolate each source
     for xx,yy in zip(x,y) : 
-        # get log scale and exclude NaN
-        logx = np.log10(xx[~np.isnan(yy)])
-        logy = np.log10(yy[~np.isnan(yy)])
-        # interpolate flux curve 
-        f = interpolate.interp1d(logx, logy, kind='linear', fill_value='extrapolate')
+        f = Interpolate_log(xx,yy)
         f_all.append(f)
 
     # get discrete points for each f(x)
