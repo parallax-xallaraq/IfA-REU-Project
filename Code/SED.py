@@ -5,7 +5,7 @@ import matplotlib as mpl
 import plotting as myP
 import numpy as np
 
-#################### COLORS ####################
+# ====================== COLORS ======================
 
 # custom colormaps 
 red_cmap = mpl.colors.ListedColormap(['#6A040F','#9D0208','#D00000','#DC2F02','#E85D04','#F48C06','#FAA307','#FFBA08'])
@@ -46,7 +46,18 @@ def PlotColorbar(cmap, min, max, n_ticks, label):
     # plot 
     plt.colorbar(sm, ticks=ticks, label=label)
 
-#################### WAVELENGTHS ####################
+# normalizes data for cmap() in log scale 
+def NormalizeForLogCmap(z) : 
+    # normalize
+    znorm = z / np.nanmax(abs(z))   
+    # get log of normalized 24um
+    znorm_log = np.log10(znorm) 
+    # normalize the log-normalized-z and +1 to make positive range 0-1        
+    znorm_log_norm = (znorm_log / np.nanmax(abs(znorm_log))) + 1    
+    # return values for cmap() 
+    return znorm_log_norm
+
+# ====================== WAVELENGTHS ======================
 
 # list wavelengths of the photometry filters (in Angstroms) 
 lam_A = np.array([
@@ -77,7 +88,7 @@ def GetObservedWavelengths_A() :
     PrintShape(lam_A)
     return lam_A
 
-#################### HELPER FUNCTIONS ####################
+# ====================== HELPER FUNCTIONS ======================
 
 # prints shape of array
 def PrintShape(arr) : 
@@ -90,7 +101,7 @@ def GetID(data) :
     PrintShape(ids)
     return ids
 
-#################### MATH ####################
+# ====================== MATH ======================
 
 # unit conversions
 def Convert_A_um(ang) : 
@@ -112,7 +123,7 @@ def Interpolate_log(x,y) :
 def Flog_X(f,x) : 
     return 10**f(np.log10(x))
 
-#################### SED PREP ####################
+# ====================== SED PREP ======================
 
 # returns array of all observed photometry and their IDs. Bad values and measurements with fracErr are set to NaN.
 def GetPhotometry(data, fracErr=0.5) :
@@ -248,7 +259,7 @@ def NormalizeSED_1um(lamRest_A, lamFlam_ergscm2) :
     # return normalized lam*F_lam
     return lamFlam_ergscm2_NORM
 
-#################### SED PLOTTING ####################
+# ====================== SINGLE SED PLOTTING ======================
 
 # plot SED curves from x and y arrays 
 def PlotSED(
@@ -273,12 +284,10 @@ def PlotSED(
     # get colormap
     cmap_use = GetCmap(cmap, n_ticks)
 
-    # transpose y to get 24um column, then take the log
-    z = y.T [14]                    # transpose y to get 24um column
-    z_log = np.log10(z)             # get log of 24um column 
-    znorm = z / np.nanmax(abs(z))   # normalize
-    znorm_log = np.log10(znorm)     # get log of normalized 24um
-    znorm_log_norm = (znorm_log / np.nanmax(abs(znorm_log))) + 1    # normalize the log-normalized-z and +1 to make positive range 0-1    
+    # prepare colormap values 
+    z = y.T [14]        # transpose y to get 24um column
+    z_log = np.log10(z)      
+    znorm_log_norm = NormalizeForLogCmap(z)
 
     # get masks for no and yes 24um measurements 
     no24 = np.where(np.isnan(z))
