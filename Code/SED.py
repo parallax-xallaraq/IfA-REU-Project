@@ -349,7 +349,8 @@ def PlotSED_Settings(
         xmin=10**-2.5,      # plot range 
         xmax=10**3.5,       #   "    "
         ymin=10**-3,        #   "    "
-        ymax=10**3          #   "    "
+        ymax=10**3,         #   "    "
+        setLabels=True      # sets x and y lables when true
     ) : 
 
     # scale
@@ -359,15 +360,17 @@ def PlotSED_Settings(
     # range
     plt.xlim(xmin, xmax)
     plt.ylim(ymin, ymax)
-    # labels 
-    plt.xlabel('$\lambda_{rest} \; [\mu m]$') 
-    plt.ylabel('$Normalized \; \lambda F_{\lambda} \; [erg \; s^{-1} \; cm^{-2}]$')
+    
     # axis
     ax = plt.gca()
     ax.set_aspect('equal')
     ax.set_adjustable('box')
     ax.set_xticks([1E-2,1E-1,1E0,1E1,1E2,1E3])
 
+    # set labels 
+    if(setLabels) : 
+        plt.xlabel('$\lambda_{rest} \; [\mu m]$') 
+        plt.ylabel('$Normalized \; \lambda F_{\lambda} \; [erg \; s^{-1} \; cm^{-2}]$')
     # set text
     if(n>0) : 
         myP.addtext_n(n)
