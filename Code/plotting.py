@@ -43,9 +43,11 @@ def SetStyle() :
     mpl.rcParams['axes.labelsize']  = 14    # font size of the x and y labels
     mpl.rcParams['axes.labelpad']   = 10    # space between label and axis
     mpl.rcParams['lines.linewidth'] = 1     # line width in points
+    # mpl.rcParams['figure.dpi']      = 150   # dots-per-inch
+
 
 # Draw the selection wedge for Donley 2012 on a plot 
-def PlotDonleyWedge() : 
+def PlotDonleyWedge(linewidth=1) : 
     # constants
     x_min = 0.08    # x >= 0.08
     y_min = 0.15    # y >= 0.15
@@ -64,10 +66,10 @@ def PlotDonleyWedge() :
     y2_high = (1.21*max)        + 0.27
 
     # plot lines between intercepts 
-    plt.plot( [x_min,       x_min],         [y_min,     y_int_xmin], 'k' )    # x >= 0.08
-    plt.plot( [x_min,       x_int_ymin],    [y_min,     y_min],      'k' )    # y >= 0.15
-    plt.plot( [x_int_ymin,  max],           [y1_low,    y2_low],     'k' )    # y >= 1.21x - 0.27
-    plt.plot( [x_min,       max],           [y1_high,   y2_high],    'k' )    # y <= 1.21x + 0.27
+    plt.plot( [x_min,       x_min],         [y_min,     y_int_xmin], 'k', linewidth=linewidth)    # x >= 0.08
+    plt.plot( [x_min,       x_int_ymin],    [y_min,     y_min],      'k', linewidth=linewidth)    # y >= 0.15
+    plt.plot( [x_int_ymin,  max],           [y1_low,    y2_low],     'k', linewidth=linewidth)    # y >= 1.21x - 0.27
+    plt.plot( [x_min,       max],           [y1_high,   y2_high],    'k', linewidth=linewidth)    # y <= 1.21x + 0.27
 
     # name the x and y axis 
     plt.xlabel('$\log(f_{5.8um}/f_{3.6um})$') 
