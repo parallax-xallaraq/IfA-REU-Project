@@ -43,8 +43,7 @@ def SetStyle() :
     mpl.rcParams['axes.labelsize']  = 14    # font size of the x and y labels
     mpl.rcParams['axes.labelpad']   = 10    # space between label and axis
     mpl.rcParams['lines.linewidth'] = 1     # line width in points
-    # mpl.rcParams['figure.dpi']      = 150   # dots-per-inch
-
+    mpl.rcParams['figure.dpi']      = 150   # dots-per-inch
 
 # Draw the selection wedge for Donley 2012 on a plot 
 def PlotDonleyWedge(linewidth=1) : 
@@ -121,7 +120,7 @@ def PlotDonleyTricolor(
     ) :
 
     # plot data
-    plt.scatter(x_xr, y_xr, marker='P', c=c_xray,     s=3, label='X-ray luminous (n='+str(len(x_xr))+')')
+    plt.scatter(x_xr, y_xr, marker='s', c=c_xray,     s=3, label='X-ray luminous (n='+str(len(x_xr))+')')
     plt.scatter(x_ir, y_ir, marker='^', c=c_ir,       s=3, label='Donley selected (n='+str(len(x_ir))+')')
     plt.scatter(x_ix, y_ix, marker='o', c=c_ir_xray,  s=3, label='Donley & X-ray (n='+str(len(x_ix))+')')
 
