@@ -8,6 +8,7 @@ import csv
 c_ir        = '#D00000' # use this for IR sources                   ALT: '#CE2727' # Fire Engine Red 
 c_xray      = '#0461A7' # use this for Xray sources                 ALT: '#384E77' # Y In Mn Blue    
 c_ir_xray   = '#D1F520' # use this for matched IR and Xray sources  ALT: '#F6CD13' # Jonquil         
+c_xray_pur  = '#8a236b' # use this for plots relating to X-ray colorbar
 
 # read from a given csv file and return a list of its contents 
 def ReadFile(filename, crop=True) : 
@@ -113,7 +114,7 @@ def PlotDonleyTricolor(
         x_ir, y_ir,             # infrared (red)
         x_ix, y_ix,             # overlap (yellow)
         path='', fileName='',   # save
-        saveAll=False,           # save 3 versions of plot 
+        saveNum=2,              # 3=full,zoom,zoom w/legend. 2= zoom,zoom w/legend. 1=zoom w/legend. 0=none
         printInfo=True          # output text
     ) :
 
@@ -128,19 +129,19 @@ def PlotDonleyTricolor(
 
     # save
     if(path and fileName) :
-        
-        if(saveAll) : 
+        if(saveNum>=3) : 
             plt.axis([-1.5,2.5,-1.5,2.5]) 
             save(path+'\\'+fileName+'_FULL.png')
+        if(saveNum>=2) : 
             plt.axis([-0.7,1.0,-0.7,1.0]) 
-            save(path+'\\'+fileName+'_ZOOM.png')    
+            save(path+'\\'+fileName+'_ZOOM.png')
+        if(saveNum>=1) :
+            plt.axis([-0.7,1.0,-0.7,1.0]) 
             plt.legend(markerscale=3)
             save(path+'\\'+fileName+'_ZOOM_legend.png')
-        else : 
+        if(saveNum<1) :
             plt.axis([-0.7,1.0,-0.7,1.0]) 
-            plt.legend(markerscale=3) 
-            save(path+'\\'+fileName+'_ZOOM_legend.png')
-
+            plt.legend(markerscale=3)
     else :
         plt.axis([-0.7,1.0,-0.7,1.0]) 
         plt.legend(markerscale=3) 
@@ -213,3 +214,63 @@ def PlotDonleyXray(
     
     # done    
     return
+
+# Plots one X-ray luminosty (log scale) histogram 
+def PlotHistOne(x,saveStr=''):
+    # Plot histogram.
+    plt.hist(x, 25, edgecolor='w', color=c_xray_pur)
+    # mean
+    mean = np.array(x).mean()
+    min_ylim, max_ylim = plt.ylim()
+    plt.axvline(mean, color='k', linestyle='dashed')
+    plt.text(mean*1.001, max_ylim*0.94, 'Mean: {:.2f}'.format(mean))
+    # set axis lables
+    plt.xlabel('$\log( \; L_{x(0.5-10keV)} \; [erg \; s^{-1}] \;)$')
+    plt.ylabel('Number')
+    # save
+    if(saveStr) :
+        save(saveStr)
+    # display
+    plt.show()
+
+# Plots two X-ray luminosty (log scale) histograms
+def PlotHistTwo(x1,x2,h=300,saveStr='') : 
+    # subplots 
+    fig, (x1hist, x2hist) = plt.subplots(1,2)
+    ## inWedge subplot
+    # plot all redshift histogram
+    x1hist.hist(x1, bins=np.arange(42,46,0.25), edgecolor='w', color=c_xray_pur)
+    x1hist.set_ylim(ymin=0, ymax=h)
+    # axis and titles 
+    x1hist.set_xlabel('$\log( \; L_{x(0.5-10keV)} \; [erg \; s^{-1}] \;)$')
+    x1hist.set_ylabel('Number')
+    x1hist.set_xticks([42,43,44,45,46])
+    # mean 
+    mean_all = x1.mean()
+    min_ylim_all, max_ylim_all = x1hist.get_ylim()
+    x1hist.axvline(mean_all, color='k',linestyle='dashed')
+    x1hist.text(mean_all*1.001, max_ylim_all*0.92, 'Mean: {:.2f}'.format(mean_all))
+    ## outWedge subplot
+    # plot agn redshift histogram
+    x2hist.hist(x2, bins=np.arange(42,46,0.25), edgecolor='w', color=c_xray_pur)
+    # axis and titles 
+    x2hist.set_xlabel('$\log( \; L_{x(0.5-10keV)} \; [erg \; s^{-1}] \;)$')
+    x2hist.set_ylabel('Number')
+    x2hist.set_ylim(ymin=0, ymax=h)
+    x2hist.set_xticks([42,43,44,45,46])
+    # mean 
+    mean_agn = x2.mean()
+    min_ylim_agn, max_ylim_agn = x2hist.get_ylim()
+    x2hist.axvline(mean_agn, color='k',linestyle='dashed')
+    x2hist.text(mean_agn*1.001, max_ylim_agn*0.92, 'Mean: {:.2f}'.format(mean_agn))
+    ## end subplots 
+    # formatting and save  
+    plt.tight_layout()
+    # save
+    if(saveStr) :
+        save(saveStr)
+    # print info 
+    print('Number of x1:\t', len(x1))
+    print('Number of x2:\t', len(x2))
+    print('Range x1:\t',  min(x1), '-', max(x1))
+    print('Range x2:\t',  min(x2), '-', max(x2))
