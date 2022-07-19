@@ -72,7 +72,7 @@ def PlotDonleyWedge(linewidth=1) :
 
     # name the x and y axis 
     plt.xlabel('$\log(f_{5.8um}/f_{3.6um})$') 
-    plt.ylabel('$\log(f_{8.0um}/f_{4.5um})$') 
+    plt.ylabel('$\log(f_{8.0um}/f_{4.5um})$')
 
 # returns a boolean mask that is True for sources within the Donley 2012 wedge 
 def SourcesInDonleyWedge(x,y) :
@@ -127,6 +127,11 @@ def PlotDonleyTricolor(
     # plotting class
     PlotDonleyWedge()
     addtext_n(len(x_ir)+len(x_xr)+len(x_ix))
+
+    # make plot square
+    ax = plt.gca()
+    ax.set_aspect('equal')
+    ax.set_adjustable('box') 
 
     # save
     if(path and fileName) :
@@ -184,6 +189,11 @@ def PlotDonleyXray(
     PlotDonleyWedge()
     addtext_n(len(x_nX)+len(x_yX))
 
+    # make plot square
+    ax = plt.gca()
+    ax.set_aspect('equal')
+    ax.set_adjustable('box') 
+    
     # save
     if(path and fileName) :
         if(saveAll) : 
