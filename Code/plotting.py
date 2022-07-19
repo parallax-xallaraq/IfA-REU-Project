@@ -184,10 +184,8 @@ def PlotDonleyXray(
     PlotDonleyWedge()
     addtext_n(len(x_nX)+len(x_yX))
 
-
     # save
     if(path and fileName) :
-
         if(saveAll) : 
             plt.axis([-1.5,2.5,-1.5,2.5]) 
             save(path+'\\'+fileName+'_FULL.png')
