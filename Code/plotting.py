@@ -193,7 +193,7 @@ def PlotDonleyXray(
     ax = plt.gca()
     ax.set_aspect('equal')
     ax.set_adjustable('box') 
-    
+
     # save
     if(path and fileName) :
         if(saveAll) : 
@@ -255,10 +255,10 @@ def PlotHistTwo(x1,x2,h=300,saveStr='') :
     x1hist.set_ylabel('Number')
     x1hist.set_xticks([42,43,44,45,46])
     # mean 
-    mean_all = x1.mean()
+    mean_x1 = x1.mean()
     min_ylim_all, max_ylim_all = x1hist.get_ylim()
-    x1hist.axvline(mean_all, color='k',linestyle='dashed')
-    x1hist.text(mean_all*1.001, max_ylim_all*0.92, 'Mean: {:.2f}'.format(mean_all))
+    x1hist.axvline(mean_x1, color='k',linestyle='dashed')
+    x1hist.text(mean_x1*1.001, max_ylim_all*0.92, 'Mean: {:.2f}'.format(mean_x1))
     ## outWedge subplot
     # plot agn redshift histogram
     x2hist.hist(x2, bins=np.arange(42,46,0.25), edgecolor='w', color=c_xray_pur)
@@ -268,10 +268,10 @@ def PlotHistTwo(x1,x2,h=300,saveStr='') :
     x2hist.set_ylim(ymin=0, ymax=h)
     x2hist.set_xticks([42,43,44,45,46])
     # mean 
-    mean_agn = x2.mean()
+    mean_x2 = x2.mean()
     min_ylim_agn, max_ylim_agn = x2hist.get_ylim()
-    x2hist.axvline(mean_agn, color='k',linestyle='dashed')
-    x2hist.text(mean_agn*1.001, max_ylim_agn*0.92, 'Mean: {:.2f}'.format(mean_agn))
+    x2hist.axvline(mean_x2, color='k',linestyle='dashed')
+    x2hist.text(mean_x2*1.001, max_ylim_agn*0.92, 'Mean: {:.2f}'.format(mean_x2))
     ## end subplots 
     # formatting and save  
     plt.tight_layout()
