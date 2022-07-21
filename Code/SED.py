@@ -13,7 +13,7 @@ yel_cmap = mpl.colors.ListedColormap(['#3C8802','#6FB505','#A1D907','#D1F520','#
 blu_cmap = mpl.colors.ListedColormap(['#003E6E','#0461A7','#0699C6','#0FCBD1','#24E3C0','#47F08B','#94F76F','#BEF768'])
 
 # returns the colormap corresponding to the key 
-def GetCmap(key='jet', n_ticks=9) :
+def GetCmap(key='turbo', n_ticks=9) :
     # red
     if( key=='red' or 
         key=='r'
@@ -32,7 +32,7 @@ def GetCmap(key='jet', n_ticks=9) :
       ) : 
         return blu_cmap
     # rainbow (default)
-    return plt.cm.get_cmap('jet', n_ticks-1)
+    return plt.cm.get_cmap('turbo', n_ticks-1)
 
 # plot colorbar 
 def PlotColorbar(cmap, min, max, n_ticks, label):
