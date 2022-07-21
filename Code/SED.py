@@ -90,16 +90,37 @@ def GetObservedWavelengths_A() :
 
 # ====================== HELPER FUNCTIONS ======================
 
-# prints shape of array
-def PrintShape(arr) : 
-    print('Array shape:\t', np.shape(arr))
-
 # returns array of ID numbers
 def GetID(data) :
     # get id numbers
     ids = np.array(data['ID_COSMOS2015'])
     PrintShape(ids)
     return ids
+
+# prints shape of array
+def PrintShape(arr) : 
+    print('Array shape:\t', np.shape(arr))
+
+# returns absolute maximum
+def MaxMagOfUneven2DList(list) : 
+    max_each = []
+    for row in list : 
+        max_each.append(max(abs(row)))
+    return max(max_each)
+
+# returns maximum
+def MaxOfUneven2DList(list) : 
+    max_each = []
+    for row in list : 
+        max_each.append(np.nanmax(row))
+    return max(max_each)
+
+# returns maximum
+def MinOfUneven2DList(list) : 
+    max_each = []
+    for row in list : 
+        max_each.append(np.nanmin(row))
+    return min(max_each)
 
 # ====================== MATH ======================
 
@@ -407,3 +428,149 @@ def MedianCurve(x,y,xmin=1E-1,xmax=1E+2) :
 
     # return x and y 
     return x_sample, y_median
+
+# ====================== 15 PANEL PREP ======================
+
+# returns the interpolaterd slope between xi and xf, f(xi)=yi, f(xf)=yf, for each function in f_arr
+def GetSlopesAndY(f_arr,xi,xf) : 
+    # initialize array 
+    yi_arr  = np.zeros(np.shape(f_arr))
+    yf_arr  = np.zeros(np.shape(f_arr))
+    m  = np.zeros(np.shape(f_arr))
+    # calculate slope for each function 
+    for i,f in enumerate(f_arr) : 
+        yi = Flog_X(f,xi)
+        yf = Flog_X(f,xf)
+        yi_arr[i] = yi
+        yf_arr[i] = yf
+        m[i] = (np.log10(yf) - np.log10(yi)) / (np.log10(xf) - np.log10(xi))
+    # return slope 
+    return m,yi_arr,yf_arr
+
+# returns the interpolaterd slope between xi and xf for each function in f_arr
+def GetSlopes(f_arr,xi,xf) : 
+    # initialize array 
+    m  = np.zeros(np.shape(f_arr))
+    # calculate slope for each function 
+    for i,f in enumerate(f_arr) : 
+        yi = Flog_X(f,xi)
+        yf = Flog_X(f,xf)
+        m[i] = (np.log10(yf) - np.log10(yi)) / (np.log10(xf) - np.log10(xi))
+    # return slope 
+    return m
+
+# returns array containing the 5 panel slope T/F masks 
+def SlopePanelMasks(uv_m,mir1_m,mir2_m) : 
+    # create bin masks using slopes (m)
+    b1 = (uv_m <  -0.3)                  & (mir1_m >= -0.2)
+    b2 = (uv_m >= -0.3) & (uv_m <= 0.2)  & (mir1_m >= -0.2)
+    b3 = (uv_m >   0.2)                  & (mir1_m >= -0.2)
+    b4 = (uv_m >= -0.3)                  & (mir1_m <  -0.2) & (mir2_m >  0.0)
+    b5 = (uv_m >= -0.3)                  & (mir1_m <  -0.2) & (mir2_m <= 0.0)
+    # put masks in list
+    panelMasks = np.array([b1,b2,b3,b4,b5])
+    # return masks
+    return panelMasks
+
+# applied panel mask to x and y, then returns the result 
+def PanelData(x,y,panelMasks) :
+    # initialize lists 
+    x_panel = []
+    y_panel = [] 
+    # bin 
+    for mask in panelMasks :
+        x_panel.append(x[mask])
+        y_panel.append(y[mask])
+    # return x and y panels
+    return x_panel, y_panel
+
+# returns the normalized array for colormap inputs
+def NormalizeForLogCmap_List(z) :
+    # get max of all values in z
+    max_totZ = MaxMagOfUneven2DList(z)
+    # normalize and log each array in z
+    znorm_log = []
+    for Zpanel in z :
+        znorm_log.append( np.log10( Zpanel / max_totZ ) )
+    # get max of log normalizedz
+    max_totZnorm = MaxMagOfUneven2DList(znorm_log)
+    # normalize again
+    znorm_log_norm = []
+    for Zpanel in znorm_log :
+        znorm_log_norm.append( (Zpanel / max_totZnorm)  + 1 )
+    # return final normalized z in log scale
+    return znorm_log_norm
+
+# ====================== 15 PANEL PLOTTING ======================
+
+# adds n=# to bottom right of ax
+def addtext_n_ax(ax, n, pre='n = '):
+    ax.text(    0.95,                           # x
+                0.05,                           # y 
+                pre + str(n),                   # string
+                transform=ax.transAxes,         # use axis coordinants
+                horizontalalignment='right'     # alignment 
+        )
+# adds #% to bottom left of ax
+def addtext_percent_ax(ax, p) :
+    ax.text(    0.05,                           # x
+                0.05,                           # y 
+                str(p)+"%",                     # string
+                transform=ax.transAxes,         # use axis coordinants
+                horizontalalignment='left'      # alignment 
+        )
+
+# applies plot settings to ax
+def PlotSED_Settings_ax(
+        ax,                 # axis 
+        n=0,                # number of sources for text 
+        p=0,                # percent of sources for text
+        xmin=10**-2.5,      # plot range 
+        xmax=10**3.5,       #   "    "
+        ymin=10**-3,        #   "    "
+        ymax=10**3,         #   "    "
+    ) : 
+
+    # scale
+    ax.set_yscale('log')
+    ax.set_xscale('log')
+    ax.grid()
+    # range
+    ax.set_xlim(xmin, xmax)
+    ax.set_ylim(ymin, ymax)
+    ax.set_yticks([1E-3,1E-2,1E-1,1E0,1E1,1E2,1E3])
+    ax.set_xticks([1E-2,1E-1,1E0,1E1,1E2,1E3])
+    # square
+    ax.set_aspect('equal')
+    ax.set_adjustable('box')
+    # set text
+    if(n>0) : 
+        addtext_n_ax(ax, n)
+    if(p>0) : 
+        addtext_percent_ax(ax, p)
+
+# plots SED curves with colormap and median on ax
+def PlotSED_ax(ax, x,y,z, cmap, p=0, median=True) : 
+    n = np.shape(x)[0]
+    for i in range(n) : 
+        ax.plot(x[i],y[i],color=cmap(z[i]))
+
+    # plot median
+    if(median) : 
+        x_m, y_m = MedianCurve(x, y, xmin=1E-1,xmax=1E+1)
+        ax.plot(x_m,y_m,c='k',linewidth=2)
+
+    PlotSED_Settings_ax(ax,n=n,p=p)
+
+# plot colorbar on ax
+def PlotColorbar_ax(ax, cmap, min, max, n_ticks, size, label):
+    # get tick marks
+    interval = (max - min) / (n_ticks - 1)
+    mult = np.arange(0,n_ticks)
+    ticks = min+(interval*mult)
+    # setup colorbar 
+    norm = mpl.colors.Normalize(vmin=min, vmax=max)
+    sm = plt.cm.ScalarMappable(norm=norm, cmap=cmap)
+    # plot 
+    clb = plt.colorbar(sm, ax=ax, ticks=ticks, location='top', shrink=0.7, aspect=10)
+    clb.ax.set_title(label,fontsize=size)
