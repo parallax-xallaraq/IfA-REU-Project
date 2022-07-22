@@ -167,7 +167,7 @@ def PlotDonleyTricolor(
     # done
     return
 
-# plot AGN on Donley IRAC color-color plot with X-ray luminosity colorbar
+# plot AGN w/ and w/o Xrays on Donley IRAC color-color plot with X-ray luminosity colorbar
 def PlotDonleyXray(
         x_nX, y_nX,             # no X-ray detections 
         x_yX, y_yX,             # yes X-ray detections
@@ -179,7 +179,7 @@ def PlotDonleyXray(
     
     # plot data16
     plt.scatter(x_nX, y_nX, marker='x', s=4, c='lightgrey', label='No X-ray (n='+str(len(x_nX))+')')
-    plt.scatter(x_yX, y_yX, marker='D', s=3, c=Lx, cmap=plt.cm.get_cmap('inferno',9), label='Has X-ray (n='+str(len(x_yX))+')')
+    plt.scatter(x_yX, y_yX, marker='D', s=3, c=Lx, cmap=plt.cm.get_cmap('turbo',9), label='Has X-ray (n='+str(len(x_yX))+')')
 
     # color bar 
     plt.clim(41.5, 46.0) # colorbar limits 
@@ -224,6 +224,46 @@ def PlotDonleyXray(
     # done    
     return
 
+# plot AGN w/ Xrays on Donley IRAC color-color plot with X-ray luminosity colorbar
+def PlotDonleyXray_Xonly(
+        x_yX, y_yX,             # yes X-ray detections
+        Lx,                     # X-ray luminosity (colorbar)
+        path='', fileName='',   # save
+        saveAll=False,          # save 3 versions of plot 
+    ) :
+    
+    # plot data16
+    plt.scatter(x_yX, y_yX, marker='D', s=3, c=Lx, cmap=plt.cm.get_cmap('turbo',9))
+
+    # color bar 
+    plt.clim(41.5, 46.0) # colorbar limits 
+    plt.colorbar(label='$\log( \; L_{x(0.5-10keV)} \; [erg \; s^{-1}] \;)$')
+
+    # plotting
+    PlotDonleyWedge()
+    addtext_n(len(x_yX))
+
+    # make plot square
+    ax = plt.gca()
+    ax.set_aspect('equal')
+    ax.set_adjustable('box') 
+
+    # save
+    if(path and fileName) :
+        if(saveAll) : 
+            plt.axis([-1.5,2.5,-1.5,2.5]) 
+            save(path+'\\'+fileName+'_FULL.png')
+            plt.axis([-0.7,1.0,-0.7,1.0]) 
+            save(path+'\\'+fileName+'_ZOOM.png')    
+        else : 
+            plt.axis([-0.7,1.0,-0.7,1.0]) 
+            save(path+'\\'+fileName+'_ZOOM.png')
+    else :
+        plt.axis([-0.7,1.0,-0.7,1.0]) 
+
+    # display
+    plt.show()
+
 # Plots one X-ray luminosty (log scale) histogram 
 def PlotHistOne(x,saveStr=''):
     # Plot histogram.
@@ -243,12 +283,12 @@ def PlotHistOne(x,saveStr=''):
     plt.show()
 
 # Plots two X-ray luminosty (log scale) histograms
-def PlotHistTwo(x1,x2,h=300,saveStr='') : 
+def PlotHistTwo(x1,x2,h=300,saveStr='',c=c_xray) : 
     # subplots 
-    fig, (x1hist, x2hist) = plt.subplots(1,2)
+    fig, (x1hist, x2hist) = plt.subplots(1,2, sharey=True)
     ## inWedge subplot
     # plot all redshift histogram
-    x1hist.hist(x1, bins=np.arange(42,46,0.25), edgecolor='w', color=c_xray_pur)
+    x1hist.hist(x1, bins=np.arange(42,46,0.25), edgecolor='w', color=c)
     x1hist.set_ylim(ymin=0, ymax=h)
     # axis and titles 
     x1hist.set_xlabel('$\log( \; L_{x(0.5-10keV)} \; [erg \; s^{-1}] \;)$')
@@ -261,10 +301,9 @@ def PlotHistTwo(x1,x2,h=300,saveStr='') :
     x1hist.text(mean_x1*1.001, max_ylim_all*0.92, 'Mean: {:.2f}'.format(mean_x1))
     ## outWedge subplot
     # plot agn redshift histogram
-    x2hist.hist(x2, bins=np.arange(42,46,0.25), edgecolor='w', color=c_xray_pur)
+    x2hist.hist(x2, bins=np.arange(42,46,0.25), edgecolor='w', color=c)
     # axis and titles 
     x2hist.set_xlabel('$\log( \; L_{x(0.5-10keV)} \; [erg \; s^{-1}] \;)$')
-    x2hist.set_ylabel('Number')
     x2hist.set_ylim(ymin=0, ymax=h)
     x2hist.set_xticks([42,43,44,45,46])
     # mean 
