@@ -272,7 +272,7 @@ def PlotHistOne(x,saveStr=''):
     mean = np.array(x).mean()
     min_ylim, max_ylim = plt.ylim()
     plt.axvline(mean, color='k', linestyle='dashed')
-    plt.text(mean*1.001, max_ylim*0.94, 'Mean: {:.2f}'.format(mean))
+    plt.text(mean*1.001, max_ylim*0.94, 'Mean: {:.1f}'.format(mean))
     # set axis lables
     plt.xlabel('$\log( \; L_{x(0.5-10keV)} \; [erg \; s^{-1}] \;)$')
     plt.ylabel('Number')
@@ -298,7 +298,7 @@ def PlotHistTwo(x1,x2,h=300,saveStr='',c=c_xray) :
     mean_x1 = x1.mean()
     min_ylim_all, max_ylim_all = x1hist.get_ylim()
     x1hist.axvline(mean_x1, color='k',linestyle='dashed')
-    x1hist.text(mean_x1*1.001, max_ylim_all*0.92, 'Mean: {:.2f}'.format(mean_x1))
+    x1hist.text(mean_x1*1.001, max_ylim_all*0.92, 'Mean: {:.1f}'.format(mean_x1))
     ## outWedge subplot
     # plot agn redshift histogram
     x2hist.hist(x2, bins=np.arange(42,46,0.25), edgecolor='w', color=c)
@@ -310,7 +310,7 @@ def PlotHistTwo(x1,x2,h=300,saveStr='',c=c_xray) :
     mean_x2 = x2.mean()
     min_ylim_agn, max_ylim_agn = x2hist.get_ylim()
     x2hist.axvline(mean_x2, color='k',linestyle='dashed')
-    x2hist.text(mean_x2*1.001, max_ylim_agn*0.92, 'Mean: {:.2f}'.format(mean_x2))
+    x2hist.text(mean_x2*1.001, max_ylim_agn*0.92, 'Mean: {:.1f}'.format(mean_x2))
     ## end subplots 
     # formatting and save  
     plt.tight_layout()
