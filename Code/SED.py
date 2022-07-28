@@ -292,10 +292,10 @@ def PlotSED(
         title='',           # plot title
         save='',            # filename to save
         median=True,        # plots a median line when true
-        xmin=10**-2.5,      # plot range 
-        xmax=10**3.5,       #   "    "
-        ymin=10**-3,        #   "    "
-        ymax=10**3          #   "    "
+        xmin=10**-2,        # plot range 
+        xmax=10**3,         #   "    "
+        ymin=10**-2.5,      #   "    "
+        ymax=10**2.5        #   "    "
     ) : 
 
     # prepare x
@@ -367,10 +367,10 @@ def PlotSED_Settings(
         n=0,                # number of sources for text 
         title='',           # plot title
         save='',            # filename to save
-        xmin=10**-2.5,      # plot range 
-        xmax=10**3.5,       #   "    "
-        ymin=10**-3,        #   "    "
-        ymax=10**3,         #   "    "
+        xmin=10**-2,        # plot range 
+        xmax=10**3,         #   "    "
+        ymin=10**-2.5,      #   "    "
+        ymax=10**2.5,       #   "    "
         setLabels=True      # sets x and y lables when true
     ) : 
 
@@ -387,6 +387,7 @@ def PlotSED_Settings(
     ax.set_aspect('equal')
     ax.set_adjustable('box')
     ax.set_xticks([1E-2,1E-1,1E0,1E1,1E2,1E3])
+    ax.set_yticks([1E-2,1E-1,1E0,1E1,1E2])
 
     # set labels 
     if(setLabels) : 
@@ -525,10 +526,10 @@ def PlotSED_Settings_ax(
         ax,                 # axis 
         n=0,                # number of sources for text 
         p=0,                # percent of sources for text
-        xmin=10**-2.5,      # plot range 
-        xmax=10**3.5,       #   "    "
-        ymin=10**-3,        #   "    "
-        ymax=10**3,         #   "    "
+        xmin=10**-2,        # plot range 
+        xmax=10**3,         #   "    "
+        ymin=10**-2.5,      #   "    "
+        ymax=10**2.5        #   "    "
     ) : 
 
     # scale
@@ -538,8 +539,8 @@ def PlotSED_Settings_ax(
     # range
     ax.set_xlim(xmin, xmax)
     ax.set_ylim(ymin, ymax)
-    ax.set_yticks([1E-3,1E-2,1E-1,1E0,1E1,1E2,1E3])
     ax.set_xticks([1E-2,1E-1,1E0,1E1,1E2,1E3])
+    ax.set_yticks([1E-2,1E-1,1E0,1E1,1E2])
     # square
     ax.set_aspect('equal')
     ax.set_adjustable('box')
