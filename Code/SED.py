@@ -44,7 +44,7 @@ def PlotColorbar(cmap, min, max, n_ticks, label):
     norm = mpl.colors.Normalize(vmin=min, vmax=max)
     sm = plt.cm.ScalarMappable(norm=norm, cmap=cmap)
     # plot 
-    plt.colorbar(sm, ticks=ticks, label=label)
+    plt.colorbar(sm, ticks=ticks, label=label, format='%.1f')
 
 # normalizes data for cmap() in log scale 
 def NormalizeForLogCmap(z) : 
@@ -573,5 +573,5 @@ def PlotColorbar_ax(ax, cmap, min, max, n_ticks, size, label):
     norm = mpl.colors.Normalize(vmin=min, vmax=max)
     sm = plt.cm.ScalarMappable(norm=norm, cmap=cmap)
     # plot 
-    clb = plt.colorbar(sm, ax=ax, ticks=ticks, location='top', shrink=0.7, aspect=10)
+    clb = plt.colorbar(sm, ax=ax, ticks=ticks, location='top', shrink=0.7, aspect=10, format='%.1f')
     clb.ax.set_title(label,fontsize=size)
