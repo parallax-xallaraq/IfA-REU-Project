@@ -91,6 +91,37 @@ def SourcesInDonleyWedge(x,y) :
     # return mask
     return(mask_inWedge)
 
+# returns a boolean mask that is True for sources that meet Donley 2012 AGN selection criteria 
+def SourcesDonleyCriteria(
+        f36,    # IRAC Ch 1
+        f45,    # IRAC Ch 2
+        f58,    # IRAC Ch 3
+        f80     # IRAC Ch 4
+    ) : 
+
+    # get x and y axis values 
+    x = np.log10(f58/f36)
+    y = np.log10(f80/f45)
+
+    # get sources in Donley wedge
+    mask_inWedge = SourcesInDonleyWedge(x,y)
+
+    # get sources that are monatomically rising
+    mask_mon = np.zeros(x.size, dtype=bool)
+    for i in range(len(x)) : 
+        if( f45[i] > f36[i] and
+            f58[i] > f45[i] and
+            f80[i] > f58[i]
+        ):
+            # set index to true
+            mask_mon[i] = True
+    
+    # get sources true in both masks 
+    mask_AGN = np.logical_and(mask_inWedge, mask_mon)
+
+    # return mask
+    return(mask_AGN)
+
 # add 'n = #' to bottom right of plot
 def addtext_n(n, pre='n = '):
     plt.text(   0.95,                           # x
