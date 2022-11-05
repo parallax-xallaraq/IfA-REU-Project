@@ -10,6 +10,17 @@ c_xray      = '#0461A7' # use this for Xray sources                 ALT: '#384E7
 c_ir_xray   = '#D1F520' # use this for matched IR and Xray sources  ALT: '#F6CD13' # Jonquil         
 c_xray_pur  = '#8a236b' # use this for plots relating to X-ray colorbar
 
+# darken the color given
+def darken_color(color, amount=1.4) :
+    import matplotlib.colors as mc
+    import colorsys
+    try:
+        c = mc.cnames[color]
+    except:
+        c = color
+    c = colorsys.rgb_to_hls(*mc.to_rgb(c))
+    return colorsys.hls_to_rgb(c[0], 1 - amount * (1 - c[1]), c[2])
+
 # read from a given csv file and return a list of its contents 
 def ReadFile(filename, crop=True) : 
     # initialize list
