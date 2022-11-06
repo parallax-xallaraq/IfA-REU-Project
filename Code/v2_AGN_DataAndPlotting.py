@@ -41,7 +41,7 @@ def ReadFile(filename, crop=True) :
     return(file)
 
 # redefine the defaults for plots
-def SetStyle(BIG = 16, MID = 12, SML = 8) :     
+def SetStyle(BIG=16, MID=12, SML=8) :     
     # figure
     mpl.rcParams['figure.figsize']  = 6, 4  # figure size in inches
     mpl.rcParams['figure.dpi']      = 150   # dots-per-inch
