@@ -41,22 +41,31 @@ def ReadFile(filename, crop=True) :
     return(file)
 
 # redefine the defaults for plots
-def SetStyle() : 
+def SetStyle(BIG = 16, MID = 12, SML = 8) :     
+    # figure
     mpl.rcParams['figure.figsize']  = 6, 4  # figure size in inches
-    mpl.rcParams['axes.titlesize']  = 16    # size of title
-    mpl.rcParams['axes.titlepad']   = 16    # space between title and plot 
-    mpl.rcParams['axes.labelsize']  = 14    # font size of the x and y labels
-    mpl.rcParams['axes.labelpad']   = 10    # space between label and axis
-    mpl.rcParams['lines.linewidth'] = 1     # line width in points
     mpl.rcParams['figure.dpi']      = 150   # dots-per-inch
+    # axes
+    mpl.rcParams['axes.titlesize']  = BIG   # size of title
+    mpl.rcParams['axes.titlepad']   = BIG   # space between title and plot 
+    mpl.rcParams['axes.labelsize']  = MID   # font size of the x and y labels
+    mpl.rcParams['axes.labelpad']   = MID-2 # space between label and axis
+    # ticks
+    mpl.rcParams['xtick.labelsize'] = SML   # font size of the tick labels
+    mpl.rcParams['ytick.labelsize'] = SML   # font size of the tick labels
+    # legend
+    mpl.rcParams['legend.fontsize'] = MID   # font size of the legend lables  
+    # lines 
+    mpl.rcParams['lines.linewidth'] = 1     # line width in points
 
 # add 'n = #' to bottom right of plot
 def AddText_n(n, pre='n = '):
     plt.text(   0.95,                           # x
                 0.05,                           # y 
-                pre + str(n),                # string
+                pre + str(n),                   # string
                 transform=plt.gca().transAxes,  # use axis coordinants
-                horizontalalignment='right'     # alignment 
+                horizontalalignment='right',    # alignment 
+                fontsize=8                      # font size 
     )
 
 # save plot 
@@ -67,3 +76,32 @@ def Save(filename) :
                     facecolor='w',
                     edgecolor='w'
     )
+
+# Draw the selection wedge for Donley 2012 on a plot 
+def PlotDonleyWedge(linewidth=1) : 
+    # constants
+    x_min = 0.08    # x >= 0.08
+    y_min = 0.15    # y >= 0.15
+    max = 10        # arbritrary 
+
+    # calculate intercepts
+    x_int_ymin = (y_min + 0.27)/1.21  # intercept between y_min and (y>=1.21x-0.27)
+    y_int_xmin = (1.21*x_min) + 0.27  # intercept between x_min and (y>=1.21x+0.27)
+
+    # calculate y_low intercepts (y>=1.21x-0.27)
+    y1_low = (1.21*x_int_ymin)  - 0.27   
+    y2_low = (1.21*max)         - 0.27
+
+    # calculate y_high intercepts (y>=1.21x+0.27)
+    y1_high = (1.21*x_min)      + 0.27
+    y2_high = (1.21*max)        + 0.27
+
+    # plot lines between intercepts 
+    plt.plot( [x_min,       x_min],         [y_min,     y_int_xmin], 'k', linewidth=linewidth)    # x >= 0.08
+    plt.plot( [x_min,       x_int_ymin],    [y_min,     y_min],      'k', linewidth=linewidth)    # y >= 0.15
+    plt.plot( [x_int_ymin,  max],           [y1_low,    y2_low],     'k', linewidth=linewidth)    # y >= 1.21x - 0.27
+    plt.plot( [x_min,       max],           [y1_high,   y2_high],    'k', linewidth=linewidth)    # y <= 1.21x + 0.27
+
+    # name the x and y axis 
+    plt.xlabel('$\log(f_{5.8um}/f_{3.6um})$') 
+    plt.ylabel('$\log(f_{8.0um}/f_{4.5um})$')
