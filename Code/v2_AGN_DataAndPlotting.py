@@ -7,8 +7,7 @@ import csv
 # color constants
 c_ir        = '#D00000' # use this for IR sources                   ALT: '#CE2727' # Fire Engine Red 
 c_xray      = '#0461A7' # use this for Xray sources                 ALT: '#384E77' # Y In Mn Blue    
-c_ir_xray   = '#D1F520' # use this for matched IR and Xray sources  ALT: '#F6CD13' # Jonquil         
-c_xray_pur  = '#8a236b' # use this for plots relating to X-ray colorbar
+c_ir_xray   = '#D1F520' # use this for matched IR and Xray sources  ALT: '#F6CD13' # Jonquil       
 
 # path variables 
 path_cat = 'D:\\IfA REU\\Catalogs'
