@@ -53,7 +53,7 @@ def SetStyle(BIG=16, MID=12, SML=8) :
     mpl.rcParams['xtick.labelsize'] = SML   # font size of the tick labels
     mpl.rcParams['ytick.labelsize'] = SML   # font size of the tick labels
     # legend
-    mpl.rcParams['legend.fontsize'] = MID   # font size of the legend lables  
+    mpl.rcParams['legend.fontsize'] = SML   # font size of the legend lables  
     # lines 
     mpl.rcParams['lines.linewidth'] = 1     # line width in points
 
