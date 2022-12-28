@@ -42,6 +42,42 @@ def ReadFile(filename, crop=True) :
     # else, return the full list
     return(file)
 
+def ReadRedshifts(file, printInfo=True) : 
+    # read redshifts from file 
+    zAll = np.array(ReadFile(file))
+    zID, zZ = zAll.T
+    # get correct data type
+    zID = np.array(zID, dtype=int)
+    zZ  = np.array(zZ,  dtype=float)
+    # apply mask to remove bad redshifts
+    mask_z = (zZ >= 0) & (zZ < 99)
+    zID = zID[mask_z]
+    zZ  = zZ[mask_z]
+    # print info
+    if(printInfo):
+        print('Number of redshifts:', len(zID))
+    # build dict
+    zdict = {
+        'ID' : zID,
+        'z' : zZ
+    }
+    # return dictionary of valid redshifts and IDs
+    return(zdict)
+
+# get redshifts less than or equal to zMax
+def GetRedshifts_lessEq(zMax, zDict, printInfo=True) : 
+    # get mask of 0<z<zMax
+    mask_lt = (zDict['z'] > 0.0) & (zDict['z'] <= zMax)
+    # make dict of z
+    zDict_lt = {
+        'ID' : zDict['ID'][mask_lt],
+        'z'  : zDict['z'][mask_lt]
+    }
+    # print info
+    if(printInfo):
+        print('Number of redshifts <='+str(zMax)+':', len(zDict_lt['z']))
+    # return dictionary of redshifts less than 
+    return(zDict_lt)
 
 ##### General Plotting #####
 
