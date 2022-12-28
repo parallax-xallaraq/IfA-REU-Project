@@ -84,17 +84,19 @@ lam_A = np.array([
     ]) # Used lambda_ref from: http://svo2.cab.inta-csic.es/theory/fps3/
 
 # returns array of observed wavelengths in Angstroms
-def GetObservedWavelengths_A() : 
-    PrintShape(lam_A)
+def GetObservedWavelengths_A(print=True) : 
+    if(print): 
+        PrintShape(lam_A)
     return lam_A
 
 # ====================== HELPER FUNCTIONS ======================
 
 # returns array of ID numbers
-def GetID(data) :
+def GetID(data, print=True) :
     # get id numbers
     ids = np.array(data['ID_COSMOS2015'])
-    PrintShape(ids)
+    if(print):
+        PrintShape(ids)
     return ids
 
 # prints shape of array
@@ -147,7 +149,7 @@ def Flog_X(f,x) :
 # ====================== SED PREP ======================
 
 # returns array of all observed photometry and their IDs. Bad values and measurements with fracErr are set to NaN.
-def GetPhotometry(data, fracErr=0.5) :
+def GetPhotometry(data, fracErr=0.5, print=True) :
 
     # get photometry table values
     flux_nu_uJy = np.array([   
@@ -216,13 +218,14 @@ def GetPhotometry(data, fracErr=0.5) :
     flux_nu_uJy = np.where(flux_err_nu_uJy/flux_nu_uJy >= fracErr, float('nan'), flux_nu_uJy) 
 
     # print info
-    PrintShape(flux_nu_uJy)
+    if(print):
+        PrintShape(flux_nu_uJy)
 
     # return table of observed photometry with bad values set to nan
     return flux_nu_uJy
 
 # Returns observed wavelength array
-def ConvertToRestWavelength(redshifts, lamObs=lam_A) : 
+def ConvertToRestWavelength(redshifts, lamObs=lam_A, print=True) : 
     # get table shape
     row = np.shape(redshifts) [0]
     col = np.shape(lamObs) [0]
@@ -233,12 +236,13 @@ def ConvertToRestWavelength(redshifts, lamObs=lam_A) :
         # lambda_rest = lambda_observed / (1+z)
         lamRest[i] = lamObs / (1+z)
     # print info
-    PrintShape(lamRest)
+    if(print):
+        PrintShape(lamRest)
     # return array of rest wavelengths
     return lamRest
 
 # returns lambda*F_lambda after converting F_nu
-def ConvertToEnergyDensity(lamRest_A, Fnu_uJy) : 
+def ConvertToEnergyDensity(lamRest_A, Fnu_uJy, print=True) : 
     # comvert units from angrstroms to centimeters
     lamRest_cm = Convert_A_cm(lamRest_A)
     # c[cm/s]/lambda^2
@@ -250,12 +254,13 @@ def ConvertToEnergyDensity(lamRest_A, Fnu_uJy) :
     # lam * F_lam [erg/s/cm]
     lamFlam_ergscm2 = np.multiply(Flam_ergscm3, lamRest_cm)
     # verify same shape 
-    PrintShape(lamFlam_ergscm2)
+    if(print):
+        PrintShape(lamFlam_ergscm2)
     # return lamFlam energy density
     return lamFlam_ergscm2
 
 # returns normalized SED at one micron
-def NormalizeSED_1um(lamRest_A, lamFlam_ergscm2) :
+def NormalizeSED_1um(lamRest_A, lamFlam_ergscm2, print=True) :
 
     # convert angstrom to microns
     lamRest_um = Convert_A_um(lamRest_A)
@@ -275,7 +280,8 @@ def NormalizeSED_1um(lamRest_A, lamFlam_ergscm2) :
     lamFlam_ergscm2_NORM = np.array(lamFlam_ergscm2_NORM)
 
     # print shape 
-    PrintShape(lamFlam_ergscm2_NORM)
+    if(print):
+        PrintShape(lamFlam_ergscm2_NORM)
 
     # return normalized lam*F_lam
     return lamFlam_ergscm2_NORM
