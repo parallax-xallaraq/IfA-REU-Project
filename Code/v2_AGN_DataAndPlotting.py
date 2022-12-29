@@ -64,21 +64,6 @@ def ReadRedshifts(file, printInfo=True) :
     # return dictionary of valid redshifts and IDs
     return(zdict)
 
-# get redshifts less than or equal to zMax
-def GetRedshifts_lessEq(zMax, zDict, printInfo=True) : 
-    # get mask of 0<z<zMax
-    mask_lt = (zDict['z'] > 0.0) & (zDict['z'] <= zMax)
-    # make dict of z
-    zDict_lt = {
-        'ID' : zDict['ID'][mask_lt],
-        'z'  : zDict['z'][mask_lt]
-    }
-    # print info
-    if(printInfo):
-        print('Number of redshifts <='+str(zMax)+':', len(zDict_lt['z']))
-    # return dictionary of redshifts less than 
-    return(zDict_lt)
-
 ##### General Plotting #####
 
 # redefine the defaults for plots
