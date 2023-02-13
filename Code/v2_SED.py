@@ -1,9 +1,11 @@
 # all imports 
+from astropy.cosmology import FlatLambdaCDM
 from scipy import interpolate
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
 import v2_AGN_DataAndPlotting as adp
+
 
 # ====================== COLORS ======================
 
@@ -145,6 +147,30 @@ def Interpolate_log(x,y) :
 # returns f(x) corrected for log scales 
 def Flog_X(f,x) : 
     return 10**f(np.log10(x))
+
+# ====================== Luminosity ======================
+
+# converts the flux to luminosity 
+def Flux_to_Lum(F,z):
+    # 'Function to convert flux to luminosity’’'
+    cosmo = FlatLambdaCDM(H0=70, Om0=0.29, Tcmb0=2.725)
+    dl = cosmo.luminosity_distance(z).value # Distance in Mpc
+    dl_cgs = dl*(3.0856E24) # Distance from Mpc to cm
+    # convert flux to luminosity
+    L = F*4*np.pi*dl_cgs**2
+    return L
+
+# interpolates the luminosity at 1um
+def Lum_at1um(lamFlam,lam,z) :
+    lum_list = []
+    for x,y,z in zip(lam,lamFlam,z) : 
+        # interpolate
+        f = Interpolate_log(x,y)
+        # normalize at 1um
+        Fnu_at1um = Flog_X(f,1*1E+4) # 1A * 10^4 = 1um
+        # convert to luminosity
+        lum_list.append(Flux_to_Lum(Fnu_at1um,z))
+    return(np.array(lum_list))
 
 # ====================== SED PREP ======================
 
