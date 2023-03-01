@@ -320,6 +320,115 @@ def NormalizeSED_1um(lamRest_A, lamFlam_ergscm2, print=True) :
     # return normalized lam*F_lam
     return lamFlam_ergscm2_NORM
 
+# ====================== AXIS SED PLOTTING ======================
+
+
+def PlotSED_ax(
+    ax,             # axis to plot on 
+    x,              # x-axis data   lam [A]
+    y,              # y-axis data:  lamFlam [erg/s/cm2]
+    z,              # data for colormap 
+    cmap,           # colormap 
+    median=True,    # plots a median line when true
+    xmin=10**-2,    # plot range 
+    xmax=10**3,     #   "    "
+    ymin=10**-2.5,  #   "    "
+    ymax=10**2.5,   #   "    "
+    setLabels=True  # sets x and y lables when true 
+):
+    # prepare x
+    x_um = Convert_A_um(x)
+    n = np.shape(x)[0]
+    
+    # plot SED curves
+    for i in range(n):
+        ax.plot(x_um[i],y[i], color=cmap(z[i]))
+    # plot median
+    if(median) : 
+        x_m, y_m = MedianCurve(x_um, y, xmin=1E-1,xmax=1E+1)
+        plt.plot(x_m,y_m,c='k',linewidth=2)
+    # plot setings 
+    PlotSED_Settings_ax(
+        ax=ax,    
+        n=n,      
+        xmin=xmin,
+        xmax=xmax,
+        ymin=ymin,
+        ymax=ymax,
+        setLabels=setLabels  
+    )
+
+def PlotSED_Settings_ax(
+    ax,                 # axis to plot on
+    n=0,                # number of sources for text 
+    xmin=10**-2,        # plot range 
+    xmax=10**3,         #   "    "
+    ymin=10**-2.5,      #   "    "
+    ymax=10**2.5,       #   "    "
+    setLabels=True      # sets x and y lables when true
+):
+    # scale
+    ax.set_yscale('log')
+    ax.set_xscale('log')
+    ax.grid()
+    # range
+    ax.set_xlim(xmin, xmax)
+    ax.set_ylim(ymin, ymax)
+    ax.set_xticks([1E-2,1E-1,1E0,1E1,1E2,1E3])
+    ax.set_yticks([1E-2,1E-1,1E0,1E1,1E2])
+    # square
+    ax.set_aspect('equal')
+    ax.set_adjustable('box')
+    # set labels 
+    if(setLabels) : 
+        plt.xlabel('$\lambda_{rest} \; [\mu m]$') 
+        plt.ylabel('$Normalized \; \lambda F_{\lambda} \; [erg \; s^{-1} \; cm^{-2}]$')
+    # set text
+    if(n>0) : 
+        adp.addtext_n_ax(ax, n)
+    
+
+# plot colorbar on ax
+def PlotColorbar_ax(
+    ax, 
+    cmap, 
+    min, 
+    max, 
+    n_ticks, 
+    label=None, 
+):
+    # get tick marks
+    interval = (max - min) / (n_ticks - 1)
+    mult = np.arange(0,n_ticks)
+    ticks = min+(interval*mult)
+    # setup colorbar 
+    norm = mpl.colors.Normalize(vmin=min, vmax=max)
+    sm = plt.cm.ScalarMappable(norm=norm, cmap=cmap)
+    # plot 
+    clb = plt.colorbar(sm, ax=ax, ticks=ticks, format='%.1f')
+    if(label):
+        clb.set_label(label)
+
+
+# returns x and y arrays for the parameter's median curve
+def MedianCurve(x,y,xmin=1E-1,xmax=1E+2) : 
+    # initialize objects
+    f_all = []
+    f_all_discrete = []
+    x_sample = np.arange(xmin,xmax,0.1)
+    # interpolate each source
+    for xx,yy in zip(x,y) : 
+        f = Interpolate_log(xx,yy)
+        f_all.append(f)
+    # get discrete points for each f(x)
+    for f in f_all : 
+        discrcete = Flog_X(f,x_sample)
+        f_all_discrete.append(discrcete)
+    # get median y value for each x
+    y_median = np.nanmedian(f_all_discrete, axis=0)
+    # return x and y 
+    return x_sample, y_median
+
 # ====================== SINGLE SED PLOTTING ======================
 
 # plot SED curves from x and y arrays 
@@ -329,7 +438,6 @@ def PlotSED(
         cmap='',            # colormap options: red, yel, blu, (jet otherwise)
         n_ticks=9,          # number of ticks on colorbar
         showBar=True,       # show the colorbar 
-        title='',           # plot title
         save='',            # filename to save
         median=True,        # plots a median line when true
         xmin=10**-2,        # plot range 
@@ -337,136 +445,165 @@ def PlotSED(
         ymin=10**-2.5,      #   "    "
         ymax=10**2.5        #   "    "
     ) : 
-    # standardize plot
-    adp.SetStyle()
 
-    # prepare x
-    x_um = Convert_A_um(x)
-    n = np.shape(x)[0]
-
-    # get colormap
-    cmap_use = GetCmap(cmap, n_ticks)
+    # build figure
+    adp.SetStyle() 
+    fig = plt.figure()
+    ax = fig.add_subplot(111)
 
     # prepare colormap values 
     z = y.T [14]        # transpose y to get 24um column
     z_log = np.log10(z)      
     znorm_log_norm = NormalizeForLogCmap(z)
+    cmap_use = GetCmap(cmap, n_ticks)
 
-    # get masks for no and yes 24um measurements 
-    no24 = np.where(np.isnan(z))
-    no24_mask = (np.zeros(n, dtype=bool))
-    no24_mask[no24] = True 
-    ye24_mask = ~ no24_mask
+    PlotSED_ax(
+        ax=ax,            
+        x=x,             
+        y=y,             
+        z=znorm_log_norm,             
+        cmap=cmap_use,          
+        median=median,   
+        xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax,
+        setLabels=True 
+    )
 
-    # apply mask 
-    x_no24 = x_um[no24_mask]
-    y_no24 = y[no24_mask]
-    x_ye24 = x_um[ye24_mask]
-    y_ye24 = y[ye24_mask]
-    znorm_log_norm_ye24 = znorm_log_norm[ye24_mask]
-
-    # plot SED curves for no24
-    n_no24 = np.shape(x_no24)[0] # row
-    for i in range(n_no24) : 
-        plt.plot(x_no24[i],y_no24[i], color='gray')
-
-    # plot SED curves for ye24
-    n_ye24 = np.shape(x_ye24)[0] # row
-    for i in range(n_ye24) : 
-        plt.plot(x_ye24[i],y_ye24[i], color=cmap_use(znorm_log_norm_ye24[i]))
-
-    # setup colorbar 
-    if(showBar) :
-        PlotColorbar(
-            cmap=cmap_use, 
-            min=np.nanmin(z_log), 
-            max=np.nanmax(z_log), 
-            n_ticks=n_ticks, 
-            label='$Normalized \; \lambda F_{\lambda} \; at \; 24 \mu m$'
-        )
-    
-    # plot median
-    if(median) : 
-        x_m, y_m = MedianCurve(x_um, y, xmin=1E-1,xmax=1E+1)
-        plt.plot(x_m,y_m,c='k',linewidth=2)
-
-    # setup plot 
-    PlotSED_Settings( 
-        n=n, 
-        title=title,    save=save, 
-        xmin=xmin,      xmax=xmax, 
-        ymin=ymin,      ymax=ymax 
-    ) 
-
-    # display 
-    plt.show()
-
-    # end 
-    return   
-
-# plot settings for SED
-def PlotSED_Settings(
-        n=0,                # number of sources for text 
-        title='',           # plot title
-        save='',            # filename to save
-        xmin=10**-2,        # plot range 
-        xmax=10**3,         #   "    "
-        ymin=10**-2.5,      #   "    "
-        ymax=10**2.5,       #   "    "
-        setLabels=True      # sets x and y lables when true
-    ) : 
-    # scale
-    plt.yscale('log')
-    plt.xscale('log')
-    plt.grid()
-    # range
-    plt.xlim(xmin, xmax)
-    plt.ylim(ymin, ymax)
-    
-    # axis
-    ax = plt.gca()
-    ax.set_aspect('equal')
-    ax.set_adjustable('box')
-    ax.set_xticks([1E-2,1E-1,1E0,1E1,1E2,1E3])
-    ax.set_yticks([1E-2,1E-1,1E0,1E1,1E2])
-
-    # set labels 
-    if(setLabels) : 
-        plt.xlabel('$\lambda_{rest} \; [\mu m]$') 
-        plt.ylabel('$Normalized \; \lambda F_{\lambda} \; [erg \; s^{-1} \; cm^{-2}]$')
-    # set text
-    if(n>0) : 
-        adp.AddText_n(n)
-    # set title
-    if(title) : 
-        plt.title(title)
+    if(showBar) : 
+        PlotColorbar_ax(
+        ax=ax, 
+        cmap=cmap_use, 
+        min=min(z_log), 
+        max = max(z_log), 
+        n_ticks=n_ticks, 
+        label='$Normalized \; \lambda F_{\lambda} \; at \; 24 \mu m$', 
+    )
+        
     # save plot as image 
     if(save) : 
         adp.Save(save)
 
-    # end
-    return
+# # plot SED curves from x and y arrays 
+# def PlotSED(
+#         x,                  # x-axis data   lam [A]
+#         y,                  # y-axis data:  lamFlam [erg/s/cm2]
+#         cmap='',            # colormap options: red, yel, blu, (jet otherwise)
+#         n_ticks=9,          # number of ticks on colorbar
+#         showBar=True,       # show the colorbar 
+#         title='',           # plot title
+#         save='',            # filename to save
+#         median=True,        # plots a median line when true
+#         xmin=10**-2,        # plot range 
+#         xmax=10**3,         #   "    "
+#         ymin=10**-2.5,      #   "    "
+#         ymax=10**2.5        #   "    "
+#     ) : 
+#     # standardize plot
+#     adp.SetStyle()
 
-# returns x and y arrays for the parameter's median curve
-def MedianCurve(x,y,xmin=1E-1,xmax=1E+2) : 
+#     # prepare x
+#     x_um = Convert_A_um(x)
+#     n = np.shape(x)[0]
+
+#     # get colormap
+#     cmap_use = GetCmap(cmap, n_ticks)
+
+#     # prepare colormap values 
+#     z = y.T [14]        # transpose y to get 24um column
+#     z_log = np.log10(z)      
+#     znorm_log_norm = NormalizeForLogCmap(z)
+
+#     # get masks for no and yes 24um measurements 
+#     no24 = np.where(np.isnan(z))
+#     no24_mask = (np.zeros(n, dtype=bool))
+#     no24_mask[no24] = True 
+#     ye24_mask = ~ no24_mask
+
+#     # apply mask 
+#     x_no24 = x_um[no24_mask]
+#     y_no24 = y[no24_mask]
+#     x_ye24 = x_um[ye24_mask]
+#     y_ye24 = y[ye24_mask]
+#     znorm_log_norm_ye24 = znorm_log_norm[ye24_mask]
+
+#     # plot SED curves for no24
+#     n_no24 = np.shape(x_no24)[0] # row
+#     for i in range(n_no24) : 
+#         plt.plot(x_no24[i],y_no24[i], color='gray')
+
+#     # plot SED curves for ye24
+#     n_ye24 = np.shape(x_ye24)[0] # row
+#     for i in range(n_ye24) : 
+#         plt.plot(x_ye24[i],y_ye24[i], color=cmap_use(znorm_log_norm_ye24[i]))
+
+#     # setup colorbar 
+#     if(showBar) :
+#         PlotColorbar(
+#             cmap=cmap_use, 
+#             min=np.nanmin(z_log), 
+#             max=np.nanmax(z_log), 
+#             n_ticks=n_ticks, 
+#             label='$Normalized \; \lambda F_{\lambda} \; at \; 24 \mu m$'
+#         )
     
-    # initialize objects
-    f_all = []
-    f_all_discrete = []
-    x_sample = np.arange(xmin,xmax,0.1)
+#     # plot median
+#     if(median) : 
+#         x_m, y_m = MedianCurve(x_um, y, xmin=1E-1,xmax=1E+1)
+#         plt.plot(x_m,y_m,c='k',linewidth=2)
 
-    # interpolate each source
-    for xx,yy in zip(x,y) : 
-        f = Interpolate_log(xx,yy)
-        f_all.append(f)
+#     # setup plot 
+#     PlotSED_Settings( 
+#         n=n, 
+#         title=title,    save=save, 
+#         xmin=xmin,      xmax=xmax, 
+#         ymin=ymin,      ymax=ymax 
+#     ) 
 
-    # get discrete points for each f(x)
-    for f in f_all : 
-        discrcete = Flog_X(f,x_sample)
-        f_all_discrete.append(discrcete)
+#     # display 
+#     plt.show()
 
-    # get median y value for each x
-    y_median = np.nanmedian(f_all_discrete, axis=0)
+#     # end 
+#     return   
 
-    # return x and y 
-    return x_sample, y_median
+# # plot settings for SED
+# def PlotSED_Settings(
+#         n=0,                # number of sources for text 
+#         title='',           # plot title
+#         save='',            # filename to save
+#         xmin=10**-2,        # plot range 
+#         xmax=10**3,         #   "    "
+#         ymin=10**-2.5,      #   "    "
+#         ymax=10**2.5,       #   "    "
+#         setLabels=True      # sets x and y lables when true
+#     ) : 
+#     # scale
+#     plt.yscale('log')
+#     plt.xscale('log')
+#     plt.grid()
+#     # range
+#     plt.xlim(xmin, xmax)
+#     plt.ylim(ymin, ymax)
+    
+#     # axis
+#     ax = plt.gca()
+#     ax.set_aspect('equal')
+#     ax.set_adjustable('box')
+#     ax.set_xticks([1E-2,1E-1,1E0,1E1,1E2,1E3])
+#     ax.set_yticks([1E-2,1E-1,1E0,1E1,1E2])
+
+#     # set labels 
+#     if(setLabels) : 
+#         plt.xlabel('$\lambda_{rest} \; [\mu m]$') 
+#         plt.ylabel('$Normalized \; \lambda F_{\lambda} \; [erg \; s^{-1} \; cm^{-2}]$')
+#     # set text
+#     if(n>0) : 
+#         adp.AddText_n(n)
+#     # set title
+#     if(title) : 
+#         plt.title(title)
+#     # save plot as image 
+#     if(save) : 
+#         adp.Save(save)
+
+#     # end
+#     return
+

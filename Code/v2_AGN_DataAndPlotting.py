@@ -96,14 +96,19 @@ def darken_color(color, amount=1.4) :
     return colorsys.hls_to_rgb(c[0], 1 - amount * (1 - c[1]), c[2])
 
 # add 'n = #' to bottom right of plot
-def AddText_n(n, pre='n = '):
-    plt.text(   0.95,                           # x
+def AddText_n(n, pre='n = ', fontsize=8):
+    ax = plt.gca()
+    addtext_n_ax(ax, n, pre=pre, fontsize=fontsize)
+
+# adds n=# to bottom right of ax
+def addtext_n_ax(ax, n, pre='n = ', fontsize=8):
+    ax.text(    0.95,                           # x
                 0.05,                           # y 
                 pre + str(n),                   # string
-                transform=plt.gca().transAxes,  # use axis coordinants
+                transform=ax.transAxes,         # use axis coordinants
                 horizontalalignment='right',    # alignment 
-                fontsize=8                      # font size 
-    )
+                fontsize=fontsize               # font size
+        )
 
 # save plot 
 def Save(filename) :
