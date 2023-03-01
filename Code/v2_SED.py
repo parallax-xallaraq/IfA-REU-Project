@@ -13,6 +13,7 @@ import v2_AGN_DataAndPlotting as adp
 red_cmap = mpl.colors.ListedColormap(['#6A040F','#9D0208','#D00000','#DC2F02','#E85D04','#F48C06','#FAA307','#FFBA08'])
 yel_cmap = mpl.colors.ListedColormap(['#3C8802','#6FB505','#A1D907','#D1F520','#FFF705','#F7E200','#EECA00','#DDB100'])
 blu_cmap = mpl.colors.ListedColormap(['#003E6E','#0461A7','#0699C6','#0FCBD1','#24E3C0','#47F08B','#94F76F','#BEF768'])
+grn_cmap = mpl.colors.ListedColormap(['#054819','#075f07','#087708','#3da70c','#70d20f','#9ae227','#c5f240','#E5F250'])
 
 # returns the colormap corresponding to the key 
 def GetCmap(key='turbo', n_ticks=9) :
@@ -33,6 +34,13 @@ def GetCmap(key='turbo', n_ticks=9) :
         key=='b'
       ) : 
         return blu_cmap
+    # green
+    if(
+        key=='grn' or
+        key=='blue' or
+        key=='g'
+      ) :
+        return grn_cmap
     # rainbow (default)
     return plt.cm.get_cmap('turbo', n_ticks-1)
 
