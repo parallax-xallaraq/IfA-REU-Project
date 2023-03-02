@@ -334,7 +334,10 @@ def PlotSED_ax(
     xmax=10**3,     #   "    "
     ymin=10**-2.5,  #   "    "
     ymax=10**2.5,   #   "    "
-    setLabels=True  # sets x and y lables when true 
+    xTicks=[1E-2,1E-1,1E0,1E1,1E2,1E3],
+    yTicks=[1E-2,1E-1,1E0,1E1,1E2],
+    xLabel='$\lambda_{rest} \; [\mu m]$',
+    yLabel='$Normalized \; \lambda F_{\lambda} \; [erg \; s^{-1} \; cm^{-2}]$'
 ):
     # prepare x
     x_um = Convert_A_um(x)
@@ -355,7 +358,10 @@ def PlotSED_ax(
         xmax=xmax,
         ymin=ymin,
         ymax=ymax,
-        setLabels=setLabels  
+        xTicks=xTicks,
+        yTicks=yTicks,
+        xLabel=xLabel,
+        yLabel=yLabel
     )
 
 def PlotSED_Settings_ax(
@@ -365,7 +371,10 @@ def PlotSED_Settings_ax(
     xmax=10**3,         #   "    "
     ymin=10**-2.5,      #   "    "
     ymax=10**2.5,       #   "    "
-    setLabels=True      # sets x and y lables when true
+    xTicks=True,
+    yTicks=True,
+    xLabel=True,
+    yLabel=True
 ):
     # scale
     ax.set_yscale('log')
@@ -376,12 +385,17 @@ def PlotSED_Settings_ax(
     ax.set_ylim(ymin, ymax)
     ax.set_xticks([1E-2,1E-1,1E0,1E1,1E2,1E3])
     ax.set_yticks([1E-2,1E-1,1E0,1E1,1E2])
+    if(not xTicks):
+        plt.setp(ax.get_xticklabels(), visible=False)
+    if(not yTicks):
+        plt.setp(ax.get_yticklabels(), visible=False)
     # square
     ax.set_aspect('equal')
     ax.set_adjustable('box')
     # set labels 
-    if(setLabels) : 
+    if(xLabel) : 
         plt.xlabel('$\lambda_{rest} \; [\mu m]$') 
+    if(yLabel):
         plt.ylabel('$Normalized \; \lambda F_{\lambda} \; [erg \; s^{-1} \; cm^{-2}]$')
     # set text
     if(n>0) : 
@@ -431,11 +445,16 @@ def MedianCurve(x,y,xmin=1E-1,xmax=1E+2) :
 
 # ====================== SINGLE SED PLOTTING ======================
 
+def PrepareCmapValues(z):
+    z_log = np.log10(z)      
+    znorm_log_norm = NormalizeForLogCmap(z)
+    return [z_log, znorm_log_norm]
+
 # plot SED curves from x and y arrays 
 def PlotSED(
         x,                  # x-axis data   lam [A]
         y,                  # y-axis data:  lamFlam [erg/s/cm2]
-        cmap='',            # colormap options: red, yel, blu, (jet otherwise)
+        cmapKey='',         # colormap options: red, grn, blu, (jet otherwise)
         n_ticks=9,          # number of ticks on colorbar
         showBar=True,       # show the colorbar 
         save='',            # filename to save
@@ -452,28 +471,25 @@ def PlotSED(
     ax = fig.add_subplot(111)
 
     # prepare colormap values 
-    z = y.T [14]        # transpose y to get 24um column
-    z_log = np.log10(z)      
-    znorm_log_norm = NormalizeForLogCmap(z)
-    cmap_use = GetCmap(cmap, n_ticks)
+    z_forMap = PrepareCmapValues(z=y.T[14]) # transpose y to get 24um column
+    cmap_use = GetCmap(cmapKey, n_ticks)
 
     PlotSED_ax(
         ax=ax,            
         x=x,             
         y=y,             
-        z=znorm_log_norm,             
+        z=z_forMap[1],             
         cmap=cmap_use,          
         median=median,   
-        xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax,
-        setLabels=True 
+        xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax
     )
 
     if(showBar) : 
         PlotColorbar_ax(
         ax=ax, 
         cmap=cmap_use, 
-        min=min(z_log), 
-        max = max(z_log), 
+        min=min(z_forMap[0]), 
+        max = max(z_forMap[0]), 
         n_ticks=n_ticks, 
         label='$Normalized \; \lambda F_{\lambda} \; at \; 24 \mu m$', 
     )
