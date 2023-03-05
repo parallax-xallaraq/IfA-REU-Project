@@ -14,6 +14,10 @@ path_cat = 'D:\\IfA REU\\Catalogs'
 path_fig = 'D:\\IfA REU\\IfA-REU-Project\\Figures'
 path_csv = 'D:\\IfA REU\\IfA-REU-Project\\Lists'
 
+# text sizes
+BIG = 16
+MID = 12
+SML = 8
 
 ##### File IO #####
 
@@ -67,7 +71,7 @@ def ReadRedshifts(file, printInfo=True) :
 ##### General Plotting #####
 
 # redefine the defaults for plots
-def SetStyle(BIG=16, MID=12, SML=8) :     
+def SetStyle() :     
     # figure
     mpl.rcParams['figure.figsize']  = 6, 4  # figure size in inches
     mpl.rcParams['figure.dpi']      = 150   # dots-per-inch
@@ -101,7 +105,7 @@ def AddText_n(n, pre='n = ', fontsize=8):
     addtext_n_ax(ax, n, pre=pre, fontsize=fontsize)
 
 # adds n=# to bottom right of ax
-def addtext_n_ax(ax, n, pre='n = ', fontsize=8):
+def addtext_n_ax(ax, n, pre='n = ', fontsize=SML):
     ax.text(    0.95,                           # x
                 0.05,                           # y 
                 pre + str(n),                   # string
