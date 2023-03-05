@@ -409,7 +409,8 @@ def PlotColorbar_ax(
     min, 
     max, 
     n_ticks, 
-    label=None, 
+    label=None,
+    location='right'
 ):
     # get tick marks
     interval = (max - min) / (n_ticks - 1)
@@ -419,7 +420,7 @@ def PlotColorbar_ax(
     norm = mpl.colors.Normalize(vmin=min, vmax=max)
     sm = plt.cm.ScalarMappable(norm=norm, cmap=cmap)
     # plot 
-    clb = plt.colorbar(sm, ax=ax, ticks=ticks, format='%.1f')
+    clb = plt.colorbar(sm, ax=ax, ticks=ticks, format='%.1f', location=location)
     if(label):
         clb.set_label(label)
 
@@ -486,13 +487,13 @@ def PlotSED(
 
     if(showBar) : 
         PlotColorbar_ax(
-        ax=ax, 
-        cmap=cmap_use, 
-        min=min(z_forMap[0]), 
-        max = max(z_forMap[0]), 
-        n_ticks=n_ticks, 
-        label='$Normalized \; \lambda F_{\lambda} \; at \; 24 \mu m$', 
-    )
+            ax=ax, 
+            cmap=cmap_use, 
+            min=min(z_forMap[0]), 
+            max = max(z_forMap[0]), 
+            n_ticks=n_ticks, 
+            label='$Normalized \; \lambda F_{\lambda} \; at \; 24 \mu m$'
+        )
         
     # save plot as image 
     if(save) : 
