@@ -336,8 +336,8 @@ def PlotSED_ax(
     ymax=10**2.5,   #   "    "
     xTicks=[1E-2,1E-1,1E0,1E1,1E2,1E3],
     yTicks=[1E-2,1E-1,1E0,1E1,1E2],
-    xLabel='$\lambda_{rest} \; [\mu m]$',
-    yLabel='$Normalized \; \lambda F_{\lambda} \; [erg \; s^{-1} \; cm^{-2}]$'
+    xLabel=True,
+    yLabel=True
 ):
     # prepare x
     x_um = Convert_A_um(x)
@@ -349,7 +349,7 @@ def PlotSED_ax(
     # plot median
     if(median) : 
         x_m, y_m = MedianCurve(x_um, y, xmin=1E-1,xmax=1E+1)
-        plt.plot(x_m,y_m,c='k',linewidth=2)
+        ax.plot(x_m,y_m,c='k',linewidth=2)
     # plot setings 
     PlotSED_Settings_ax(
         ax=ax,    
@@ -394,9 +394,9 @@ def PlotSED_Settings_ax(
     ax.set_adjustable('box')
     # set labels 
     if(xLabel) : 
-        plt.xlabel('$\lambda_{rest} \; [\mu m]$') 
+        ax.set_xlabel('$\lambda_{rest} \; [\mu m]$') 
     if(yLabel):
-        plt.ylabel('$Normalized \; \lambda F_{\lambda} \; [erg \; s^{-1} \; cm^{-2}]$')
+        ax.set_ylabel('$Normalized \; \lambda F_{\lambda} \; [erg \; s^{-1} \; cm^{-2}]$')
     # set text
     if(n>0) : 
         adp.addtext_n_ax(ax, n)
