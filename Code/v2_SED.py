@@ -67,6 +67,11 @@ def NormalizeForLogCmap(z) :
     # return values for cmap() 
     return znorm_log_norm
 
+def PrepareCmapValues(z):
+    z_log = np.log10(z)      
+    znorm_log_norm = NormalizeForLogCmap(z)
+    return [z_log, znorm_log_norm]
+
 # ====================== WAVELENGTHS ======================
 
 # list wavelengths of the photometry filters (in Angstroms) 
@@ -445,11 +450,6 @@ def MedianCurve(x,y,xmin=1E-1,xmax=1E+2) :
     return x_sample, y_median
 
 # ====================== SINGLE SED PLOTTING ======================
-
-def PrepareCmapValues(z):
-    z_log = np.log10(z)      
-    znorm_log_norm = NormalizeForLogCmap(z)
-    return [z_log, znorm_log_norm]
 
 # plot SED curves from x and y arrays 
 def PlotSED(
