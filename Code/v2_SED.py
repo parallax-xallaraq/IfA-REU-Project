@@ -4,6 +4,7 @@ from scipy import interpolate
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
+import copy 
 import v2_AGN_DataAndPlotting as adp
 
 
@@ -67,10 +68,19 @@ def NormalizeForLogCmap(z) :
     # return values for cmap() 
     return znorm_log_norm
 
-def PrepareCmapValues(z):
-    z_log = np.log10(z)      
-    znorm_log_norm = NormalizeForLogCmap(z)
-    return [z_log, znorm_log_norm]
+def PrepareCmapValues(z,min=None,max=None):
+    zcopy = copy.deepcopy(z)
+    # correct extrema 
+    if(min) : 
+        zcopy[zcopy<min] = min
+    if(max) : 
+        zcopy[zcopy>max] = max
+    # caculate log 
+    z_log = np.log10(zcopy)     
+    # normalize 
+    z_cmap = NormalizeForLogCmap(zcopy)
+    # return values as tuple 
+    return (z_log, z_cmap)
 
 # ====================== WAVELENGTHS ======================
 
@@ -415,7 +425,8 @@ def PlotColorbar_ax(
     max, 
     n_ticks, 
     label=None,
-    location='right'
+    location='right',
+    extend='neither'
 ):
     # get tick marks
     interval = (max - min) / (n_ticks - 1)
@@ -425,7 +436,7 @@ def PlotColorbar_ax(
     norm = mpl.colors.Normalize(vmin=min, vmax=max)
     sm = plt.cm.ScalarMappable(norm=norm, cmap=cmap)
     # plot 
-    clb = plt.colorbar(sm, ax=ax, ticks=ticks, format='%.1f', location=location)
+    clb = plt.colorbar(sm, ax=ax, ticks=ticks, format='%.1f', location=location, extend=extend)
     if(label):
         clb.set_label(label)
 
