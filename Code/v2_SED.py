@@ -20,17 +20,20 @@ grn_cmap = mpl.colors.ListedColormap(['#054819','#075f07','#087708','#3da70c','#
 def GetCmap(key='turbo', n_ticks=9) :
     # red
     if( key=='red' or 
+        key=='RED' or
         key=='r'
       ) : 
         return red_cmap
     # yellow
     if( key=='yel' or 
+        key=='YEL' or
         key=='yellow' or 
         key=='y'
       ) : 
         return yel_cmap
     # blue 
     if( key=='blu' or 
+        key=='BLU' or
         key=='blue' or 
         key=='b'
       ) : 
@@ -38,7 +41,8 @@ def GetCmap(key='turbo', n_ticks=9) :
     # green
     if(
         key=='grn' or
-        key=='blue' or
+        key=='GRN' or
+        key=='green' or
         key=='g'
       ) :
         return grn_cmap
@@ -59,12 +63,16 @@ def PlotColorbar(cmap, min, max, n_ticks, label):
 
 # normalizes data for cmap() in log scale 
 def NormalizeForLogCmap(z) : 
+    # edge case: one input, znorm_log_norm will be 0/0 = nan. default to center value 1/2=0.5
+    if(len(z)==1) : 
+        # return value for cmap() 
+        return np.array([0.5])
     # normalize
-    znorm = z / np.nanmax(abs(z))   
+    znorm = z / np.nanmax(abs(z))  
     # get log of normalized 24um
     znorm_log = np.log10(znorm) 
     # normalize the log-normalized-z and +1 to make positive range 0-1        
-    znorm_log_norm = (znorm_log / np.nanmax(abs(znorm_log))) + 1    
+    znorm_log_norm = (znorm_log / np.nanmax(abs(znorm_log))) + 1
     # return values for cmap() 
     return znorm_log_norm
 
@@ -356,15 +364,23 @@ def PlotSED_ax(
 ):
     # prepare x
     x_um = Convert_A_um(x)
-    n = np.shape(x)[0]
-    
-    # plot SED curves
-    for i in range(n):
-        ax.plot(x_um[i],y[i], color=cmap(z[i]))
-    # plot median
-    if(median) : 
-        x_m, y_m = MedianCurve(x_um, y, xmin=1E-1,xmax=1E+1)
-        ax.plot(x_m,y_m,c='k',linewidth=2)
+
+    shape = np.shape(x)
+    # one galaxy
+    if(len(shape) == 1) : 
+        n = 1
+        ax.plot(x_um, y, color=cmap(z))
+    # many galaxies 
+    else:
+        n = shape[0]
+        # plot SED curves
+        for i in range(n):
+            ax.plot(x_um[i],y[i], color=cmap(z[i]))
+        # plot median
+        if(median and n>1) : 
+            x_m, y_m = MedianCurve(x_um, y, xmin=1E-1,xmax=1E+1)
+            ax.plot(x_m,y_m,c='k',linewidth=2)
+
     # plot setings 
     PlotSED_Settings_ax(
         ax=ax,    
