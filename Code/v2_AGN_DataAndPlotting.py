@@ -7,7 +7,7 @@ import csv
 # color constants
 c_ir        = '#D00000' # use this for IR sources                   ALT: '#CE2727' # Fire Engine Red 
 c_xray      = '#0461A7' # use this for Xray sources                 ALT: '#384E77' # Y In Mn Blue    
-c_ir_xray   = '#81c138' # use this for matched IR and Xray sources  ALT: '#F6CD13' # Jonquil       # OLD: '#D1F520'
+c_ir_xray   = '#81C138' # use this for matched IR and Xray sources  ALT: '#F6CD13' # Jonquil       # OLD: '#D1F520'
 
 # path variables 
 path_cat = 'D:\\IfA REU\\Catalogs'
@@ -102,10 +102,10 @@ def darken_color(color, amount=1.4) :
 # add 'n = #' to bottom right of plot
 def AddText_n(n, pre='n = ', fontsize=8):
     ax = plt.gca()
-    addtext_n_ax(ax, n, pre=pre, fontsize=fontsize)
+    Addtext_n_ax(ax, n, pre=pre, fontsize=fontsize)
 
 # adds n=# to bottom right of ax
-def addtext_n_ax(ax, n, pre='n = ', fontsize=SML):
+def Addtext_n_ax(ax, n, pre='n = ', fontsize=SML):
     ax.text(    0.95,                           # x
                 0.05,                           # y 
                 pre + str(n),                   # string
