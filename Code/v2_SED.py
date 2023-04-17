@@ -430,7 +430,7 @@ def PlotSED_Settings_ax(
         ax.set_ylabel('$Normalized \; \lambda F_{\lambda} \; [erg \; s^{-1} \; cm^{-2}]$')
     # set text
     if(n>0) : 
-        adp.addText_n_ax(ax, n)
+        adp.AddText_n_ax(ax, n)
     
 
 # plot colorbar on ax
