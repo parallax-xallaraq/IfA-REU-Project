@@ -442,7 +442,8 @@ def PlotColorbar_ax(
     n_ticks, 
     label=None,
     location='right',
-    extend='neither'
+    extend='neither',
+    shrink=1.0
 ):
     # get tick marks
     interval = (max - min) / (n_ticks - 1)
@@ -452,7 +453,7 @@ def PlotColorbar_ax(
     norm = mpl.colors.Normalize(vmin=min, vmax=max)
     sm = plt.cm.ScalarMappable(norm=norm, cmap=cmap)
     # plot 
-    clb = plt.colorbar(sm, ax=ax, ticks=ticks, format='%.1f', location=location, extend=extend)
+    clb = plt.colorbar(sm, ax=ax, ticks=ticks, format='%.1f', location=location, extend=extend, shrink=shrink)
     if(label):
         clb.set_label(label)
 
