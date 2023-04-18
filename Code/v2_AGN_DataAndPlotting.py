@@ -141,6 +141,18 @@ def AddText_z_ax(ax, fullText='', min=-1, max=-1, greaterEqual=False, lessEqual=
                 fontsize=fontsize               # font size
         )
 
+# draws median line for dataset x for a histogram axis
+def MeanLineForHist_ax(ax,x,c='k',xtext=0.998, ytext=0.94, horizAlign='right', pre='Mean: ') :
+    mean = np.array(x).mean()
+    min_ylim, max_ylim = ax.set_ylim()
+    ax.axvline(mean, color=c, linestyle='dashed', linewidth=2)
+    ax.text(mean*xtext, max_ylim*ytext, pre+'{:.1f}'.format(mean), c=c, horizontalalignment=horizAlign)
+
+# draws median line for dataset x for a histogram plot
+def MeanLineForHist(x,c='k',xtext=0.998, ytext=0.94, horizAlign='right', pre='Mean: ') :
+    ax = plt.gca()
+    MeanLineForHist_ax(ax,x,c,xtext,ytext,horizAlign,pre)
+
 # save plot 
 def Save(filename) :
     plt.savefig(    filename,
