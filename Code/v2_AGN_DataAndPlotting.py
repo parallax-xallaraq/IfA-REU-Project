@@ -289,3 +289,39 @@ def AGN_DonleyCriterea(
             AGNmask[i] = True 
     # return mask where True is an AGN 
     return(AGNmask)
+
+##### By Z multipanel plotting #####
+
+# generate figure and axis for n subplots oriented in row
+def ByZ_SetupFig(n,orientVertical=True, figsizeConstVal=6):
+    # standardize figure style
+    SetStyle() 
+    # calculate size using number of subplots
+    if(orientVertical):
+        figsize = (figsizeConstVal, 1+(3*n))
+        nrows = n
+        ncols = 1
+    else : 
+        figsize = (1+(3*n),figsizeConstVal)
+        nrows = 1
+        ncols = n
+    # create figure and axis
+    fig, ax = plt.subplots(nrows=nrows,ncols=ncols,sharex=True,sharey=True,figsize=figsize,layout='constrained',facecolor='w')
+    return fig,ax
+
+# finish by z plots
+def ByZ_FinishPlot(
+        fig,
+        xaxis='',
+        yaxis='',
+        save='',
+        xpos=(0.5, -0.01),
+        ypos=(0.15,  0.5)
+):
+    # name the x and y axis 
+    if(xaxis) : fig.text(xpos[0], xpos[1], xaxis, ha='center', fontsize=MID)
+    if(yaxis) : fig.text(ypos[0], ypos[1], yaxis, va='center', fontsize=MID, rotation='vertical')
+    # finish
+    if(save): Save(save)
+    plt.show()
+    plt.close()
