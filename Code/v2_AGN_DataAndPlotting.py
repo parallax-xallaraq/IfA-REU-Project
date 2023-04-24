@@ -194,6 +194,8 @@ def PlotDonleyWedge_ax(ax, linewidth=1) :
 def PlotDonleyWedge(linewidth=1) : 
     ax = plt.gca()
     PlotDonleyWedge_ax(ax)
+    plt.xlabel('$\log(f_{5.8um}/f_{3.6um})$')
+    plt.ylabel('$\log(f_{8.0um}/f_{4.5um})$')
 
 # calculate x position using IRAC channels
 def IRACx(ch1, ch3):
