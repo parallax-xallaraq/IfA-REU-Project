@@ -141,6 +141,16 @@ def AddText_z_ax(ax, fullText='', min=-1, max=-1, greaterEqual=False, lessEqual=
                 fontsize=fontsize               # font size
         )
 
+# adds #% to bottom left of ax
+def addtext_percent_ax(ax, p, fontsize=SML) :
+    ax.text(    0.05,                           # x
+                0.05,                           # y 
+                str(p)+"%",                     # string
+                transform=ax.transAxes,         # use axis coordinants
+                horizontalalignment='left',     # alignment 
+                fontsize=fontsize               # font size
+        )
+
 # draws median line for dataset x for a histogram axis
 def MeanLineForHist_ax(ax,x,c='k',xtext=0.998, ytext=0.94, horizAlign='right', pre='Mean: ') :
     mean = np.array(x).mean()
@@ -193,7 +203,7 @@ def PlotDonleyWedge_ax(ax, linewidth=1) :
 # Draw the selection wedge for Donley 2012 on an plot
 def PlotDonleyWedge(linewidth=1) : 
     ax = plt.gca()
-    PlotDonleyWedge_ax(ax)
+    PlotDonleyWedge_ax(ax,linewidth)
     plt.xlabel('$\log(f_{5.8um}/f_{3.6um})$')
     plt.ylabel('$\log(f_{8.0um}/f_{4.5um})$')
 
