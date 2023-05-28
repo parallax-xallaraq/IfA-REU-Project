@@ -328,11 +328,12 @@ def ByZ_FinishPlot(
         yaxis='',
         save='',
         xpos=(0.5, -0.01),
-        ypos=(0.15,  0.5)
+        ypos=(0.15,  0.5),
+        fontsize=MID
 ):
     # name the x and y axis 
-    if(xaxis) : fig.text(xpos[0], xpos[1], xaxis, ha='center', fontsize=MID)
-    if(yaxis) : fig.text(ypos[0], ypos[1], yaxis, va='center', fontsize=MID, rotation='vertical')
+    if(xaxis) : fig.text(xpos[0], xpos[1], xaxis, ha='center', fontsize=fontsize)
+    if(yaxis) : fig.text(ypos[0], ypos[1], yaxis, va='center', fontsize=fontsize, rotation='vertical')
     # finish
     if(save): Save(save)
     plt.show()
