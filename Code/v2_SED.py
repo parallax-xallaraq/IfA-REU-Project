@@ -7,7 +7,6 @@ import numpy as np
 import copy 
 import v2_AGN_DataAndPlotting as adp
 
-
 # ====================== COLORS ======================
 
 # custom colormaps 
