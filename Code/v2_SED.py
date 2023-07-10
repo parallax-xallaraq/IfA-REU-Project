@@ -90,8 +90,12 @@ def NormalizeForLogCmap(z) :
     # get log of normalized 24um
     znorm_log = np.log10(znorm) 
     # normalize the log-normalized-z and +1 to make positive range 0-1        
-    znorm_log_norm = (znorm_log / np.nanmax(abs(znorm_log))) + 1
-    # return values for cmap() 
+    maxLogZ = np.nanmax(abs(znorm_log))
+    if(maxLogZ == 0) : 
+        # edge case: no maximum, all values are same. Ground to 0. 
+        znorm_log_norm = np.array([0.]*len(z))
+    else : 
+        znorm_log_norm = (znorm_log / maxLogZ) + 1    # return values for cmap() 
     return znorm_log_norm
 
 def PrepareCmapValues(z,min=None,max=None):
