@@ -172,6 +172,11 @@ def Save(filename) :
                     edgecolor='w'
     )
 
+def BoldSubplot(ax, lineWidth = 2) : 
+    ax.spines["top"     ].set_linewidth(lineWidth)
+    ax.spines["bottom"  ].set_linewidth(lineWidth)
+    ax.spines["left"    ].set_linewidth(lineWidth)
+    ax.spines["right"   ].set_linewidth(lineWidth)
 
 ##### IRAC color-color diagrams #####
 
@@ -338,3 +343,28 @@ def ByZ_FinishPlot(
     if(save): Save(save)
     plt.show()
     plt.close()
+
+def ByZ_SetupFig_Rectangle(nrow, ncol) : 
+    # standardize figure style
+    SetStyle() 
+    # create figure and axis
+    fig, ax = plt.subplots(nrows=nrow,ncols=ncol,sharex=True,sharey=True,figsize=((3*ncol),(3*nrow)),layout='constrained',facecolor='w')
+    return fig, ax
+
+def ConcatAllColors(tri_byZ) : 
+    # get avalues of all AGNs
+    allAGNs = {
+        'RED' : {'x' : np.array([]), 'y' : np.array([]) },
+        'GRN' : {'x' : np.array([]), 'y' : np.array([]) },
+        'BLU' : {'x' : np.array([]), 'y' : np.array([]) }
+    }
+    for color in tri_byZ.values() : 
+        allAGNs['RED']['x'] = np.concatenate((allAGNs['RED']['x'], color['RED']['x']))
+        allAGNs['RED']['y'] = np.concatenate((allAGNs['RED']['y'], color['RED']['y']))
+        allAGNs['GRN']['x'] = np.concatenate((allAGNs['GRN']['x'], color['GRN']['x']))
+        allAGNs['GRN']['y'] = np.concatenate((allAGNs['GRN']['y'], color['GRN']['y']))
+        allAGNs['BLU']['x'] = np.concatenate((allAGNs['BLU']['x'], color['BLU']['x']))
+        allAGNs['BLU']['y'] = np.concatenate((allAGNs['BLU']['y'], color['BLU']['y']))
+    return allAGNs
+
+
