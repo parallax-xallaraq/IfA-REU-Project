@@ -114,7 +114,7 @@ def AddText_n_ax(ax, n, pre='n = ', fontsize=SML):
                 fontsize=fontsize               # font size
         )
 
-# adds redshift range to top right of ax
+# adds redshift range to top left of ax
 def AddText_z_ax(ax, fullText='', min=-1, max=-1, greaterEqual=False, lessEqual=True, fontsize=SML) :
     # initialize string
     text = ''
@@ -132,20 +132,10 @@ def AddText_z_ax(ax, fullText='', min=-1, max=-1, greaterEqual=False, lessEqual=
             if(lessEqual):      text += ' $\leq$ '
             else:               text += ' < '
             text += str(max)
-    # add text to top right on axis plot
+    # add text to top left on axis plot
     ax.text(    0.05,                           # x
                 0.93,                           # y 
                 text,                           # string
-                transform=ax.transAxes,         # use axis coordinants
-                horizontalalignment='left',     # alignment 
-                fontsize=fontsize               # font size
-        )
-
-# adds #% to bottom left of ax
-def addtext_percent_ax(ax, p, fontsize=SML) :
-    ax.text(    0.05,                           # x
-                0.05,                           # y 
-                str(p)+"%",                     # string
                 transform=ax.transAxes,         # use axis coordinants
                 horizontalalignment='left',     # alignment 
                 fontsize=fontsize               # font size
