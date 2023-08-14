@@ -168,6 +168,20 @@ def BoldSubplot(ax, lineWidth = 2) :
     ax.spines["left"    ].set_linewidth(lineWidth)
     ax.spines["right"   ].set_linewidth(lineWidth)
 
+
+def PlotContours_ax(ax,x,y,colors='k',linewidths=0.4) :
+    # modified from https://saturncloud.io/blog/scatter-plot-with-contour-according-to-a-parameter-using-matplotlib/ 
+    from scipy.stats import kde
+    # estimate density of points
+    density = kde.gaussian_kde(np.vstack([x, y]))
+    # create grid for the contour plot
+    xmin, xmax = x.min(), x.max()
+    ymin, ymax = y.min(), y.max()
+    Xgrid, Ygrid = np.mgrid[xmin:xmax:100j, ymin:ymax:100j]
+    Z = density.evaluate(np.vstack([Xgrid.ravel(), Ygrid.ravel()]))
+    # plot density contour lines
+    ax.contour(Xgrid, Ygrid, Z.reshape(Xgrid.shape), colors=colors,linewidths=linewidths)
+
 ##### IRAC color-color diagrams #####
 
 # Draw the selection wedge for Donley 2012 on an axis  
