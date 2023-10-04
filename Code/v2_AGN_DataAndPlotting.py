@@ -21,6 +21,19 @@ SML = 8
 
 ##### File IO #####
 
+def UnpackTable(fname: str) -> dict[str,np.array]:
+    """Get a table dictionary like {x: xdata, y: ydata} from a CSV file containing data""" 
+    # get data from the csv file
+    arr = np.genfromtxt(fname, delimiter=",", dtype=str)
+    # separate column names and data arrays 
+    cols = np.array(arr[0 ], dtype=str)
+    data = np.array(arr[1:]).T # transpose to get x and y
+    # build dictionary to hold the table {x: xdata, y: ydata}
+    table = {}
+    for col, dat in zip(cols,data) : 
+        table[col] = dat
+    return table
+
 # read from a given csv file and return a list of its contents 
 def ReadFile(filename, crop=True) : 
     # initialize list
