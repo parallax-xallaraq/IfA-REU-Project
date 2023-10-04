@@ -81,6 +81,42 @@ def ReadRedshifts(file, printInfo=True) :
     # return dictionary of valid redshifts and IDs
     return(zdict)
 
+# returns array of ( min <= z < max )
+def GetRedshiftsInRange(
+        zDict,   # dictionary of ID and z  
+        min=0,   # minimum
+        max=99,  # maximum 
+        incusiveMin=False,
+        printLength=True
+) : 
+    """
+    zDict_split = {
+        '$0 < z \leq 1$'   : adp.GetRedshiftsInRange(zDict_all,          max=1  ),
+        '$1 < z \leq 1.5$' : adp.GetRedshiftsInRange(zDict_all, min=1,   max=1.5),
+        '$1.5 < z \leq 2$' : adp.GetRedshiftsInRange(zDict_all, min=1.5, max=2  ),
+        '$2 < z \leq 3$'   : adp.GetRedshiftsInRange(zDict_all, min=2,   max=3  ),
+        '$3 < z \leq 6$'   : adp.GetRedshiftsInRange(zDict_all, min=3           )
+    }
+    """
+    # get mask of indecies that are in redshift range (true)
+    if(incusiveMin):
+        mask = (zDict['z'] >= min) & (zDict['z'] < max)
+    else: 
+        mask = (zDict['z'] > min) & (zDict['z'] <= max)
+    # idolate ID and z
+    inRange = {
+        'ID' : zDict['ID'][mask] ,
+        'z'  : zDict['z'] [mask]
+    }
+    if(printLength) : 
+        if(incusiveMin): 
+            print(min, '<= z < ', max, ': ', len(inRange['ID']))
+        else:
+             print(min, '< z <= ', max, ': ', len(inRange['ID']))       
+    return(inRange)
+
+
+
 ##### General Plotting #####
 
 # redefine the defaults for plots
