@@ -436,8 +436,8 @@ def PlotSED_Settings_ax(
     # range
     ax.set_xlim(xmin, xmax)
     ax.set_ylim(ymin, ymax)
-    ax.set_xticks([1E-2,1E-1,1E0,1E1,1E2,1E3])
-    ax.set_yticks([1E-2,1E-1,1E0,1E1,1E2])
+    # ax.set_xticks([1E-2,1E-1,1E0,1E1,1E2,1E3])
+    # ax.set_yticks([1E-2,1E-1,1E0,1E1,1E2])
     if(not xTicks):
         plt.setp(ax.get_xticklabels(), visible=False)
     if(not yTicks):
