@@ -228,7 +228,7 @@ def Lum_at1um(lamFlam,lam,z) :
 # ====================== SED PREP ======================
 
 # returns array of all observed photometry and their IDs. Bad values and measurements with fracErr are set to NaN.
-def GetPhotometry(data, fracErr=0.5, print=True) :
+def GetPhotometry(data, fracErr=0.9999, print=True) :
 
     # get photometry table values
     flux_nu_uJy = np.array([   
@@ -294,7 +294,7 @@ def GetPhotometry(data, fracErr=0.5, print=True) :
 
     # change bad values to NaN
     flux_nu_uJy = np.where(flux_nu_uJy <= float(0), float('nan'), flux_nu_uJy)
-    flux_nu_uJy = np.where(flux_err_nu_uJy/flux_nu_uJy >= fracErr, float('nan'), flux_nu_uJy) 
+    if(fracErr != None) : flux_nu_uJy = np.where(flux_err_nu_uJy/flux_nu_uJy >= fracErr, float('nan'), flux_nu_uJy) 
 
     # print info
     if(print):
