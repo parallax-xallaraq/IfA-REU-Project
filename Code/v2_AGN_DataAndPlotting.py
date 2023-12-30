@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import numpy as np
 import csv 
+from rasterize_and_save import rasterize_and_save
 
 # color constants
 c_ir        = '#D00000' # use this for IR sources                   ALT: '#CE2727' # Fire Engine Red 
@@ -213,12 +214,23 @@ def MeanLineForHist(x,c='k',xtext=0.998, ytext=0.94, horizAlign='right', pre='Me
     MeanLineForHist_ax(ax,x,c,xtext,ytext,horizAlign,pre)
 
 # save plot 
-def Save(filename) :
-    plt.savefig(    filename,
-                    bbox_inches ="tight",
-                    pad_inches=0.05,
-                    facecolor='w',
-                    edgecolor='w'
+def Save(filename, rasterize_list: list=None, dpi=1200) : 
+    # get axis 
+    rast: list  = rasterize_list
+    if(rast == None) : rast = plt.gcf().get_axes() 
+    # save
+    rasterize_and_save(
+        fname = filename, 
+        rasterize_list = rast, 
+        fig = plt.gcf(), 
+        dpi = dpi,
+        savefig_kw = {
+            'bbox_inches'   : "tight",
+            'pad_inches'    : 0.05,
+            'facecolor'     : 'w',
+            'edgecolor'     : 'w',
+            'dpi'           : dpi
+        }                   
     )
 
 def BoldSubplot(ax, lineWidth = 2) : 
