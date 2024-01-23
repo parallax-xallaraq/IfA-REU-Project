@@ -425,3 +425,58 @@ def ByZ_SetupFig_Rectangle(nrow, ncol) :
     # create figure and axis
     fig, ax = plt.subplots(nrows=nrow,ncols=ncol,sharex=True,sharey=True,figsize=((3*ncol),(3*nrow)),layout='constrained',facecolor='w')
     return fig, ax
+
+##### Conversions #####
+
+
+def LogErgsToLogSols(ergs):
+    # log(Lergs) --> log(Lsol)
+    # ---------------------------------------------------------------
+    #  log(Lergs)   = log(Lergs)
+    #   10 ^ log(Lergs) = Lergs
+    #  ( 10 ^ log(Lergs) ) * sol/ergs = Lergs * sol/ergs
+    #  ( 10 ^ log(Lergs) ) * sol/ergs = Lsol
+    #  log(( 10 ^ log(Lergs) ) * sol/ergs) = log(Lsol)
+    #  log( 10 ^ log(Lergs) ) + log(sol/ergs) = log(Lsol)
+    #  log(Lergs)+ log(sol/ergs) = log(Lsol)
+    #       -- 1 Solar Luminosity = 3.826x10^33 ergs/s
+    #  log(Lergs) + log(1 [Lsol] /3.826x10^33 [erg/s]) = log(Lsol)
+    return ( ergs + np.log10(1.0 / 3.826 * 10**33))
+
+def LogSolsToLogErgs(sols) : 
+    return ( sols + np.log10(3.826 * 10**33))
+
+def KToLbol(kx, a=10.96, b=11.93, c=17.79) : 
+    # https://ui.adsabs.harvard.edu/abs/2020A%26A...636A..73D/abstract
+    # Duras, et al. (2020) Universal bolometric corrections for active galactic nuclei over seven luminosity decades
+    # Equation 2 & Table 1
+    return b * ( a* kx - 1.0 )**(1.0/c) # log(Lbol/Lsol)
+
+def LbolToK(lbol, # log(Lbol[Lsol])
+            a=10.96, b=11.93, c=17.79) :
+    # https://ui.adsabs.harvard.edu/abs/2020A%26A...636A..73D/abstract
+    # Duras, et al. (2020) Universal bolometric corrections for active galactic nuclei over seven luminosity decades
+    # Equation 2 & Table 1
+    return (a * (1.0 + (lbol/b)**c) ) # 
+
+
+def LxToK(lx, # log(Lx[erg/s])
+          a=15.33, b=11.48, c=16.20) : 
+    # https://ui.adsabs.harvard.edu/abs/2020A%26A...636A..73D/abstract
+    # Duras, et al. (2020) Universal bolometric corrections for active galactic nuclei over seven luminosity decades
+    # Equation 3 & Table 1
+    return ( a * (1 + LogErgsToLogSols(lx)/b)**c )
+
+def KToLx(kx, a=15.33, b=11.48, c=16.20) :
+    # https://ui.adsabs.harvard.edu/abs/2020A%26A...636A..73D/abstract
+    # Duras, et al. (2020) Universal bolometric corrections for active galactic nuclei over seven luminosity decades
+    # Equation 3 & Table 1 
+    return LogSolsToLogErgs( b * ( a* kx - 1.0 )**(1.0/c) )
+
+def LxToLbol(lx) : 
+    return KToLbol(LxToK(lx))
+
+def LbolToLx(lbol) : 
+    return KToLx(LbolToK(lbol))
+
+    
