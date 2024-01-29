@@ -428,55 +428,108 @@ def ByZ_SetupFig_Rectangle(nrow, ncol) :
 
 ##### Conversions #####
 
+def LogErgsToLogSols(logLx_erg: float) -> float :
+    """Convert log-scale Xray luminosity in ergs/s to log-scale solar luminosities 
 
-def LogErgsToLogSols(ergs):
-    # log(Lergs) --> log(Lsol)
-    # ---------------------------------------------------------------
-    #  log(Lergs)   = log(Lergs)
-    #   10 ^ log(Lergs) = Lergs
-    #  ( 10 ^ log(Lergs) ) * sol/ergs = Lergs * sol/ergs
-    #  ( 10 ^ log(Lergs) ) * sol/ergs = Lsol
-    #  log(( 10 ^ log(Lergs) ) * sol/ergs) = log(Lsol)
-    #  log( 10 ^ log(Lergs) ) + log(sol/ergs) = log(Lsol)
-    #  log(Lergs)+ log(sol/ergs) = log(Lsol)
-    #       -- 1 Solar Luminosity = 3.826x10^33 ergs/s
-    #  log(Lergs) + log(1 [Lsol] /3.826x10^33 [erg/s]) = log(Lsol)
-    return ( ergs + np.log10(1.0 / 3.826 * 10**33))
+    Args:
+        logLx_erg (float): log-scale Xray luminosity in ergs/s
 
-def LogSolsToLogErgs(sols) : 
-    return ( sols + np.log10(3.826 * 10**33))
+    Returns:
+        float: log-scale solar luminosities
+    """
+    Lx_erg = 10**logLx_erg
+    Lx_sol = Lx_erg / (3.826 * 10**33)
+    logLx_sol = np.log10(Lx_sol)
+    return logLx_sol
 
-def KToLbol(kx, a=10.96, b=11.93, c=17.79) : 
-    # https://ui.adsabs.harvard.edu/abs/2020A%26A...636A..73D/abstract
-    # Duras, et al. (2020) Universal bolometric corrections for active galactic nuclei over seven luminosity decades
-    # Equation 2 & Table 1
-    return b * ( a* kx - 1.0 )**(1.0/c) # log(Lbol/Lsol)
+def LogSolsToLogErgs(logLx_sol: float)  -> float : 
+    """Convert log-scale solar luminosities to log-scale Xray luminosity in ergs/s 
 
-def LbolToK(lbol, # log(Lbol[Lsol])
-            a=10.96, b=11.93, c=17.79) :
-    # https://ui.adsabs.harvard.edu/abs/2020A%26A...636A..73D/abstract
-    # Duras, et al. (2020) Universal bolometric corrections for active galactic nuclei over seven luminosity decades
-    # Equation 2 & Table 1
-    return (a * (1.0 + (lbol/b)**c) ) # 
+    Args:
+        logLx_sol (float): log-scale solar luminosities
+
+    Returns:
+        float: log-scale Xray luminosity in ergs/s
+    """
+    Lx_sol = 10**logLx_sol
+    Lx_erg = Lx_sol * (3.826 * 10**33)
+    logLx_erg = np.log10(Lx_erg)
+    return logLx_erg
+
+def Lx_to_kx(logLx_sol: float, a: float = 15.33, b: float = 11.48, c: float = 16.20)  -> float : 
+    """Calculate X-ray correction factor from X-ray luminosity band. 
+    See Equation 3 in https://ui.adsabs.harvard.edu/abs/2020A%26A...636A..73D/abstract
+
+    Args:
+        logLx_sol (float): log-scale X-ray luminosity in solar luminosities.
+        a (float, optional): See Table 1 row 'general' column a under Kx(Lx). Defaults to 15.33.
+        b (float, optional): See Table 1 row 'general' column b under Kx(Lx). Defaults to 11.48.
+        c (float, optional): See Table 1 row 'general' column c under Kx(Lx). Defaults to 16.20.
+
+    Returns:
+        float: X-ray correction factor
+    """
+    return ( a * (1.0 + (logLx_sol/b)**c)  )
+
+def Lbol_to_kx(logLbol_sol: float, a: float = 10.96, b: float = 11.93, c: float = 17.79) -> float : 
+    """Calculate X-ray correction factor from bolometric luminosity in solar luminosities. 
+    See Equation 2 in https://ui.adsabs.harvard.edu/abs/2020A%26A...636A..73D/abstract
+
+    Args:
+        logLbol_sol (float): _description_
+        a (float, optional): See Table 1 row 'general' column a under Kx(Lbol). Defaults to 10.96.
+        b (float, optional): See Table 1 row 'general' column b under Kx(Lbol). Defaults to 11.93.
+        c (float, optional): See Table 1 row 'general' column c under Kx(Lbol). Defaults to 17.79.
+
+    Returns:
+        float: X-ray correction factor
+    """
+    return ( a * (1.0 + (logLbol_sol/b)**c)  )
+
+def Lx_To_Lbol(logLx_erg: float)  -> float : 
+    """Calculate bolometric luminosity from correction factor.
+
+    Args:
+        logLx_erg (float): log-scale X-ray luminosity in erg/s
+
+    Returns:
+        float: Log-scale Bolometric luminosity in solar luminosities.
+    """
+    logLx_sol = LogErgsToLogSols(logLx_erg)
+    kx = Lx_to_kx(logLx_sol)
+    Lbol_sol = 10**(logLx_sol) * kx
+    return np.log10(Lbol_sol)
 
 
-def LxToK(lx, # log(Lx[erg/s])
-          a=15.33, b=11.48, c=16.20) : 
-    # https://ui.adsabs.harvard.edu/abs/2020A%26A...636A..73D/abstract
-    # Duras, et al. (2020) Universal bolometric corrections for active galactic nuclei over seven luminosity decades
-    # Equation 3 & Table 1
-    return ( a * (1 + LogErgsToLogSols(lx)/b)**c )
+def Lbol_to_Lx(logLbol_sol: float) -> float : 
+    """Calculates log-scale X-ray luminosity in erg/s from log-scale bolometric luminosity in solar luminosities. 
 
-def KToLx(kx, a=15.33, b=11.48, c=16.20) :
-    # https://ui.adsabs.harvard.edu/abs/2020A%26A...636A..73D/abstract
-    # Duras, et al. (2020) Universal bolometric corrections for active galactic nuclei over seven luminosity decades
-    # Equation 3 & Table 1 
-    return LogSolsToLogErgs( b * ( a* kx - 1.0 )**(1.0/c) )
+    Args:
+        logLbol_sol (float): log-scale bolometric luminosity in solar luminosity.
 
-def LxToLbol(lx) : 
-    return KToLbol(LxToK(lx))
-
-def LbolToLx(lbol) : 
-    return KToLx(LbolToK(lbol))
-
+    Returns:
+        float: log-scale X-ray luminosity in erg/s
+    """
+    kx = Lbol_to_kx(logLbol_sol)
+    Lx_sol = 10**(logLbol_sol) / kx
+    logLx_erg = LogSolsToLogErgs(np.log10(Lx_sol))
+    return logLx_erg
     
+    
+def AddLbolAx(ax, isYax=True) :
+    """Adds a secondary axis of bolomatric luminosity in solar luminosities for a log-scale X-ray luminosity in ergs/s.
+
+    Args:
+        ax: plot axis.
+        isYax (bool, optional): Add to y axis when true, add to x when false. Defaults to True.
+
+    Returns:
+        _type_: secondary axis.
+    """
+    if(isYax) :
+        secax = ax.secondary_yaxis('right', functions=(Lx_To_Lbol, Lbol_to_Lx))
+        secax.set_ylabel('$\log( \; L_{BOL} \; [L_{\odot}] )$')
+    else : 
+        secax = ax.secondary_xaxis('right', functions=(Lx_To_Lbol, Lbol_to_Lx))
+        secax.set_xlabel('$\log( \; L_{BOL} \; [L_{\odot}] )$')
+    return secax
