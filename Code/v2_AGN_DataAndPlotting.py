@@ -11,9 +11,9 @@ c_xray      = '#0461A7' # use this for Xray sources                 ALT: '#384E7
 c_ir_xray   = '#81C138' # use this for matched IR and Xray sources  ALT: '#F6CD13' # Jonquil       # OLD: '#D1F520'
 
 # path variables 
-path_cat = 'D:\\IfA REU\\Catalogs'
-path_fig = 'D:\\IfA REU\\IfA-REU-Project\\Figures'
-path_csv = 'D:\\IfA REU\\IfA-REU-Project\\Lists'
+path_cat = 'D:\\AstroCatalogs\\IfA REU'
+path_fig = 'D:\\GitHub\\IfA-REU-Project\\Figures'
+path_csv = 'D:\\GitHub\\IfA-REU-Project\\Lists'
 
 # text sizes
 BIG = 16
