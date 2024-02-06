@@ -202,11 +202,11 @@ def AddText_z_ax(ax, fullText='', min=-1, max=-1, greaterEqual=False, lessEqual=
         )
 
 # draws median line for dataset x for a histogram axis
-def MeanLineForHist_ax(ax,x,c='k',xtext=0.998, ytext=0.94, horizAlign='right', pre='Mean: ') :
+def MeanLineForHist_ax(ax,x,c='k',xtext=0.998, ytext=0.94, horizAlign='right', pre='Mean: ', addText=True) :
     mean = np.array(x).mean()
     min_ylim, max_ylim = ax.set_ylim()
     ax.axvline(mean, color=c, linestyle='dashed', linewidth=2)
-    ax.text(mean*xtext, max_ylim*ytext, pre+'{:.1f}'.format(mean), c=c, horizontalalignment=horizAlign)
+    if(addText) : ax.text(mean*xtext, max_ylim*ytext, pre+'{:.1f}'.format(mean), c=c, horizontalalignment=horizAlign)
 
 # draws median line for dataset x for a histogram plot
 def MeanLineForHist(x,c='k',xtext=0.998, ytext=0.94, horizAlign='right', pre='Mean: ') :
@@ -516,7 +516,7 @@ def Lbol_to_Lx(logLbol_sol: float) -> float :
     return logLx_erg
     
     
-def AddLbolAx(ax, isYax=True) :
+def AddLbolAx(ax, isYax=True, label='$\log( \; L_{BOL} \; [L_{\odot}] )$') :
     """Adds a secondary axis of bolomatric luminosity in solar luminosities for a log-scale X-ray luminosity in ergs/s.
 
     Args:
@@ -528,8 +528,8 @@ def AddLbolAx(ax, isYax=True) :
     """
     if(isYax) :
         secax = ax.secondary_yaxis('right', functions=(Lx_To_Lbol, Lbol_to_Lx))
-        secax.set_ylabel('$\log( \; L_{BOL} \; [L_{\odot}] )$')
+        if(label!='') : secax.set_ylabel(label)
     else : 
-        secax = ax.secondary_xaxis('right', functions=(Lx_To_Lbol, Lbol_to_Lx))
-        secax.set_xlabel('$\log( \; L_{BOL} \; [L_{\odot}] )$')
+        secax = ax.secondary_xaxis('top', functions=(Lx_To_Lbol, Lbol_to_Lx))
+        if(label!='') : secax.set_xlabel(label)
     return secax
