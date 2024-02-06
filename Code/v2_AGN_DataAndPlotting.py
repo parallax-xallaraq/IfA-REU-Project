@@ -419,11 +419,11 @@ def ByZ_FinishPlot(
     plt.show()
     plt.close()
 
-def ByZ_SetupFig_Rectangle(nrow, ncol) : 
+def ByZ_SetupFig_Rectangle(nrow, ncol, sharex=True, sharey=True) : 
     # standardize figure style
     SetStyle() 
     # create figure and axis
-    fig, ax = plt.subplots(nrows=nrow,ncols=ncol,sharex=True,sharey=True,figsize=((3*ncol),(3*nrow)),layout='constrained',facecolor='w')
+    fig, ax = plt.subplots(nrows=nrow,ncols=ncol,sharex=sharex,sharey=sharey,figsize=((3*ncol),(3*nrow)),layout='constrained',facecolor='w')
     return fig, ax
 
 ##### Conversions #####
