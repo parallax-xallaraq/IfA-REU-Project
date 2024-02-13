@@ -367,6 +367,9 @@ def NormalizeSED_1um(lamRest_A, lamFlam_ergscm2, print=True) :
 
 # ====================== AXIS SED PLOTTING ======================
 
+def OneLegendTextBox(ax, text='', loc="upper right") : 
+    if(text!='') :
+        ax.legend(labels = [text], loc=loc, handlelength=0, handletextpad=0,)
 
 def PlotSED_ax(
     ax,             # axis to plot on 
@@ -382,7 +385,8 @@ def PlotSED_ax(
     xTicks=[1E-2,1E-1,1E0,1E1,1E2,1E3],
     yTicks=[1E-2,1E-1,1E0,1E1,1E2],
     xLabel=True,
-    yLabel=True
+    yLabel=True,
+    plotLabel=''
 ):
     # prepare x
     x_um = Convert_A_um(x)
@@ -402,6 +406,8 @@ def PlotSED_ax(
         if(median and n>1) : 
             x_m, y_m = MedianCurve(x_um, y, xmin=1E-1,xmax=1E+1)
             ax.plot(x_m,y_m,c='k',linewidth=2)
+
+    OneLegendTextBox(ax,plotLabel)
 
     # plot setings 
     PlotSED_Settings_ax(
