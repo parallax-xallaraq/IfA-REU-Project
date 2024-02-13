@@ -554,3 +554,156 @@ def PlotSED(
     # save plot as image 
     if(save) : 
         adp.Save(save)
+
+def PlotSED_Row(
+        x,                  # x-axis data LIST:   lam [A]
+        y,                  # y-axis data LIST:  lamFlam [erg/s/cm2]
+        z,                  # colorbar data LIST
+        cmapKey,            # colormap options: red, grn, blu, (jet otherwise)
+        n_ticks=9,          # number of ticks on colorbar
+        showBar=True,       # show the colorbar 
+        save='',            # filename to save
+        median=True,        # plots a median line when true
+        xmin=10**-1.2,      # plot range 
+        xmax=10**2.6,       #   "    "
+        ymin=10**-2.0,      #   "    "
+        ymax=10**2.0,       #   "    "
+        orientWide=False,   # true for tall, false for wide 
+        cbarLabel='$Normalized \; \lambda F_{\lambda} \; at \; 24 \mu m$',
+        cbarRange=None,      # tuple range of colorbar (min, max)
+        title=None,
+        drawIRAC=False,     # draws vertical lines are IRAC channel wavelengths
+        drawGuides=True,    # draws vertical lines at UV and MIR for reference
+        plotLables = ['X-ray', 'IRAC+X-ray', 'IRAC']
+):
+    # check that lists are all same length 
+    n = len(x)
+    if(n!=len(y) and n!=len(z) and n!=len(cmapKey) ):
+        print('[!] Bad inputs')
+        return
+
+    # determine subplot shape and parameters
+    if(orientWide) :
+        nrow = 1
+        ncol = len(x)
+        figsize = (4+(2*n), 4)
+        cbarLocation = 'top'
+    else:
+        nrow = len(x)
+        ncol = 1
+        figsize = (6, 2+(2*n))
+        cbarLocation = 'right'
+
+    # build figure
+    adp.SetStyle() 
+    fig = plt.figure(figsize=figsize)    
+    ax = []
+    for i in range(n):
+        ax.append(fig.add_subplot(nrow,ncol,i+1))
+   
+    # plot each SED
+    for i in range(n): 
+        # initialize plot settings 
+        xTicks=True
+        yTicks=True
+        xLabel=False
+        yLabel=False
+        cbarLab=None
+        # for wide plot 
+        if(orientWide==1) : 
+            if(i>0) :           
+                yTicks = False
+            if(i==int(n/2)):    
+                xLabel = True 
+                cbarLab = cbarLabel
+            if(i==0) :          
+                yLabel = True 
+        # for tall plot 
+        elif(orientWide==0) :
+            if(i<n-1):          
+                xTicks = False
+            if(i==n-1):         
+                xLabel = True 
+            if(i==int(n/2)):    
+                yLabel = True 
+                cbarLab = cbarLabel
+
+        # fix type
+        if(isinstance(z[i], np.float64)) :
+            zi = np.array([z[i]])
+        else : 
+            zi = z[i]
+        # determine color range
+        if(cbarRange):
+            cbarMin=cbarRange[0]
+            cbarMax=cbarRange[1]
+            z_forMap = PrepareCmapValues(zi,min=10**cbarMin,max=10**cbarMax)
+        else : 
+            z_forMap = PrepareCmapValues(zi) 
+            cbarMin=min(z_forMap[0])
+            cbarMax=max(z_forMap[0])
+
+        # get colormap 
+        cmap_use = GetCmap(cmapKey[i], n_ticks)
+
+        if(drawGuides == True) : 
+            ax[i].axvline(0.25, c='gray', linestyle=':', linewidth=1.5) # UV
+            ax[i].axvline(6.00, c='gray', linestyle=':', linewidth=1.5) # MIR
+            ax[i].text( 0.25*1.1, 65, 'UV',  horizontalalignment='left',  color='gray', fontsize=adp.SML )
+            ax[i].text( 6.00*0.9, 65, 'MIR', horizontalalignment='right', color='gray', fontsize=adp.SML )
+
+        # plot on axis 
+        PlotSED_ax(
+            ax=ax[i],            
+            x=x[i],             
+            y=y[i],             
+            z=z_forMap[1],             
+            cmap=cmap_use,          
+            median=median,   
+            xmin=xmin, xmax=xmax, ymin=ymin, ymax=ymax,
+            xTicks=xTicks,
+            yTicks=yTicks,
+            xLabel=xLabel,
+            yLabel=yLabel,
+            plotLabel=plotLables[i]
+        )
+
+        if(drawIRAC == True) : 
+            ax[i].axvline(3.6)
+            ax[i].axvline(4.5)
+            ax[i].axvline(5.8)
+            ax[i].axvline(8.0)
+
+        # colorbar 
+        if(showBar) : 
+            extend='neither'
+            if(cbarRange) : 
+                # check bounds
+                smaller = np.nanmin(zi) < 10**cbarMin
+                bigger = np.nanmax(zi) > 10**cbarMax
+                if(smaller and bigger) :    extend = 'both'
+                elif(smaller) :             extend = 'min'
+                elif(bigger) :              extend = 'max'
+
+            PlotColorbar_ax(
+                ax=ax[i], 
+                cmap=cmap_use, 
+                min=cbarMin, 
+                max=cbarMax, 
+                n_ticks=n_ticks, 
+                label=cbarLab, 
+                location=cbarLocation,
+                extend=extend
+            )
+
+    # set title of plot 
+    if(title) :
+        plt.title(title)
+
+    # save plot as image 
+    if(save) : 
+        adp.Save(save)
+    
+    # finish
+    plt.show()
+    plt.close()
