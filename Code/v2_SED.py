@@ -574,7 +574,7 @@ def PlotSED_Row(
         title=None,
         drawIRAC=False,     # draws vertical lines are IRAC channel wavelengths
         drawGuides=True,    # draws vertical lines at UV and MIR for reference
-        plotLables = ['X-ray', 'IRAC+X-ray', 'IRAC']
+        plotLables = ['X-ray', 'X-ray+IRAC', 'IRAC']
 ):
     # check that lists are all same length 
     n = len(x)
