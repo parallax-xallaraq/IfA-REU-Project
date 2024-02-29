@@ -20,6 +20,10 @@ BIG = 16
 MID = 12
 SML = 8
 
+# AGN templates https://ui.adsabs.harvard.edu/abs/2010ApJ...713..970A/abstract
+template_AGN_z1 = [0.40, 0.55]
+template_Sbc_z1 = [-0.23,-0.23]
+
 ##### File IO #####
 
 def UnpackTable(fname: str) -> dict[str,np.array]:
