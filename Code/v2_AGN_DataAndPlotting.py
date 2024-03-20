@@ -159,24 +159,18 @@ def AddText_n(n, pre='n = ', fontsize=8):
     AddText_n_ax(ax, n, pre=pre, fontsize=fontsize)
 
 # adds n=# to bottom right of ax
-def AddText_n_ax(ax, n, pre='n = ', fontsize=SML):
+def AddText_n_ax(ax, n, pre='n = ', fontsize=SML, x=0.95, y=0.05, color='k'):
     ax.text(    0.95,                           # x
                 0.05,                           # y 
-                pre + str(n),                   # string
-                transform=ax.transAxes,         # use axis coordinants
-                horizontalalignment='right',    # alignment 
-                fontsize=fontsize               # font size
-        )
-    
-def AddText_n2_ax(ax, n, pre='n = ', fontsize=SML, color='k'):
-    ax.text(    0.95,                           # x
-                0.10,                           # y 
                 pre + str(n),                   # string
                 transform=ax.transAxes,         # use axis coordinants
                 horizontalalignment='right',    # alignment 
                 color=color,                    # font color 
                 fontsize=fontsize               # font size
         )
+    
+def AddText_n2_ax(ax, n, pre='n = ', fontsize=SML, color='k'):
+    AddText_n_ax(ax, n, pre, fontsize, 0.95, 0.10, color)
 
 # adds redshift range to top left of ax
 def AddText_z_ax(ax, fullText='', min=-1, max=-1, greaterEqual=False, lessEqual=True, fontsize=SML) :
