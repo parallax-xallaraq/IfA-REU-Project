@@ -160,8 +160,7 @@ def AddText_n(n, pre='n = ', fontsize=8):
 
 # adds n=# to bottom right of ax
 def AddText_n_ax(ax, n, pre='n = ', fontsize=SML, x=0.95, y=0.05, color='k'):
-    ax.text(    0.95,                           # x
-                0.05,                           # y 
+    ax.text(    x,y,                            # position 
                 pre + str(n),                   # string
                 transform=ax.transAxes,         # use axis coordinants
                 horizontalalignment='right',    # alignment 
