@@ -382,7 +382,7 @@ def AGN_DonleyCriterea(
 ##### By Z multipanel plotting #####
 
 # generate figure and axis for n subplots oriented in row
-def ByZ_SetupFig(n,orientVertical=True, figsizeConstVal=6):
+def ByZ_SetupFig(n,orientVertical=True, figsizeConstVal=6, sharex=True,sharey=True):
     # standardize figure style
     SetStyle() 
     # calculate size using number of subplots
@@ -395,7 +395,7 @@ def ByZ_SetupFig(n,orientVertical=True, figsizeConstVal=6):
         nrows = 1
         ncols = n
     # create figure and axis
-    fig, ax = plt.subplots(nrows=nrows,ncols=ncols,sharex=True,sharey=True,figsize=figsize,layout='constrained',facecolor='w')
+    fig, ax = plt.subplots(nrows=nrows,ncols=ncols,sharex=sharex,sharey=sharey,figsize=figsize,layout='constrained',facecolor='w')
     return fig,ax
 
 # finish by z plots
